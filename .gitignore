@@ -1,0 +1,15 @@
+# 依赖
+node_modules/
+
+# 构建产物（单文件版 HTML 为交付物，保留提交）
+dist/
+
+# 日志与本地环境
+*.log
+.DS_Store
+*.local
+
+# 编辑器
+.idea/
+.vscode/
+*.swp
