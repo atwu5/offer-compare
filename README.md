@@ -23,7 +23,13 @@ npm run build    # 构建单文件产物 dist/index.html（已内联 JS/CSS，�
 npm run sanity   # 计算引擎自测（个税表 / 基数截断 / 试用期 / 差异拆解一致性 / 谈薪反推等）
 ```
 
-仓库内已提供构建好的单文件版：`Offer到手对比-单文件版.html`，直接用浏览器打开即可。
+仓库内已提供构建好的单文件版：`Offer到手对比-单文件版.html`（同内容备份在 `docs/index.html`，供 GitHub Pages 使用），直接用浏览器打开即可。
+
+## 在线使用
+
+- 仓库地址：<https://github.com/jatwu555/offer-compare>
+- 网页版（GitHub Pages，由 `docs/index.html` 提供）：<https://jatwu555.github.io/offer-compare/>
+  - 若链接未生效：仓库 Settings → Pages → Source 选择 `main` 分支 `/docs` 目录，保存即可。
 
 ---
 
