@@ -22,13 +22,13 @@ export function ScenarioTable({
   return (
     <Card className="p-5 sm:p-6">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <h3 className="text-base font-semibold text-slate-900">保守 / 正常 / 乐观 场景对比</h3>
-        <span className="text-xs text-slate-400">展示稳定年可支配现金，点击列可切换全页场景</span>
+        <h3 className="text-base font-semibold text-cream-50">保守 / 正常 / 乐观 场景对比</h3>
+        <span className="text-xs text-cream-500">展示稳定年可支配现金，点击列可切换全页场景</span>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full min-w-[420px] text-sm">
           <thead>
-            <tr className="text-left text-xs text-slate-400">
+            <tr className="text-left text-xs text-cream-500">
               <th className="pb-2 font-medium">场景</th>
               <th className="pb-2 text-right font-medium">{aName}</th>
               <th className="pb-2 text-right font-medium">{bName}</th>
@@ -43,23 +43,23 @@ export function ScenarioTable({
                 <tr
                   key={s}
                   onClick={() => onPick(s)}
-                  className={`cursor-pointer border-t border-slate-100 transition hover:bg-slate-50 ${
-                    active ? 'bg-indigo-50/40' : ''
+                  className={`cursor-pointer border-t border-white/[0.07] transition hover:bg-ink-850/[0.04] ${
+                    active ? 'bg-gold-500/[0.07]' : ''
                   }`}
                 >
-                  <td className="py-2.5 font-medium text-slate-700">
+                  <td className="py-2.5 font-medium text-cream-200">
                     {SCENARIO_LABELS[s]}
-                    {active && <span className="ml-1.5 text-[11px] text-indigo-500">当前</span>}
+                    {active && <span className="ml-1.5 text-[11px] text-gold-400">当前</span>}
                   </td>
-                  <td className="num py-2.5 text-right text-slate-800">{fmtWan(ra.steadyYear.disposableCash)}</td>
-                  <td className="num py-2.5 text-right font-semibold text-slate-900">{fmtWan(rb.steadyYear.disposableCash)}</td>
+                  <td className="num py-2.5 text-right text-cream-100">{fmtWan(ra.steadyYear.disposableCash)}</td>
+                  <td className="num py-2.5 text-right font-semibold text-cream-50">{fmtWan(rb.steadyYear.disposableCash)}</td>
                 </tr>
               )
             })}
           </tbody>
         </table>
       </div>
-      {note && <p className="mt-3 text-[13px] text-slate-500">{note}</p>}
+      {note && <p className="mt-3 text-[13px] text-cream-400">{note}</p>}
     </Card>
   )
 }

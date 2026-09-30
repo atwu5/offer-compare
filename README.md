@@ -27,8 +27,8 @@ npm run sanity   # 计算引擎自测（个税表 / 基数截断 / 试用期 / �
 
 ## 在线使用
 
-- 仓库地址：<https://github.com/jatwu555/offer-compare>
-- 网页版（GitHub Pages，由 `docs/index.html` 提供）：<https://jatwu555.github.io/offer-compare/>
+- 仓库地址：<https://github.com/atwu5/offer-compare>
+- 网页版（GitHub Pages，由 `docs/index.html` 提供）：<https://atwu5.github.io/offer-compare/>
   - 若链接未生效：仓库 Settings → Pages → Source 选择 `main` 分支 `/docs` 目录，保存即可。
 
 ---

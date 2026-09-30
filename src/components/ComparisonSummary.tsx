@@ -27,49 +27,49 @@ export function ComparisonSummary({
       label: '名义涨薪',
       sub: '按税前年收入',
       value: fmtPct(headline.nominal),
-      tone: headline.nominal >= 0 ? 'text-slate-900' : 'text-red-600',
+      tone: headline.nominal >= 0 ? 'text-cream-50' : 'text-red-400',
     },
     {
       label: '实际可支配收入涨幅',
       sub: '按稳定年可支配现金',
       value: fmtPct(headline.real),
-      tone: headline.real >= 0 ? 'text-emerald-600' : 'text-red-600',
+      tone: headline.real >= 0 ? 'text-emerald-400' : 'text-red-400',
       highlight: true,
     },
     {
       label: '首年多到手',
       sub: '含签字费等一次性项目',
       value: fmtSignedCNY(headline.firstDiff),
-      tone: headline.firstDiff >= 0 ? 'text-emerald-600' : 'text-red-600',
+      tone: headline.firstDiff >= 0 ? 'text-emerald-400' : 'text-red-400',
     },
     {
       label: '稳定年多到手',
       sub: '排除一次性收入与成本',
       value: fmtSignedCNY(headline.steadyDiff),
-      tone: headline.steadyDiff >= 0 ? 'text-emerald-600' : 'text-red-600',
+      tone: headline.steadyDiff >= 0 ? 'text-emerald-400' : 'text-red-400',
       highlight: true,
     },
   ]
 
   return (
     <Card className="overflow-hidden">
-      <div className="border-b border-slate-100 px-5 py-4 sm:px-6">
-        <h3 className="text-xl font-semibold text-slate-900 sm:text-2xl">{headline.title}</h3>
-        <p className="mt-1.5 text-sm leading-relaxed text-slate-500">{headline.explanation}</p>
+      <div className="border-b border-white/[0.07] px-5 py-4 sm:px-6">
+        <h3 className="text-xl font-semibold text-cream-50 sm:text-2xl">{headline.title}</h3>
+        <p className="mt-1.5 text-sm leading-relaxed text-cream-400">{headline.explanation}</p>
       </div>
-      <div className="grid grid-cols-2 divide-slate-100 lg:grid-cols-4 lg:divide-x">
+      <div className="grid grid-cols-2 divide-white/[0.07] lg:grid-cols-4 lg:divide-x">
         {metrics.map((m) => (
           <div
             key={m.label}
-            className={`px-5 py-4 sm:px-6 ${m.highlight ? 'bg-slate-50/60' : ''} ${
+            className={`px-5 py-4 sm:px-6 ${m.highlight ? 'bg-ink-850/[0.04]' : ''} ${
               metrics.indexOf(m) < 2 ? 'max-lg:[&:nth-child(1)]:border-b max-lg:[&:nth-child(2)]:border-b' : ''
             }`}
           >
-            <div className="text-xs text-slate-500">{m.label}</div>
+            <div className="text-xs text-cream-400">{m.label}</div>
             <div className={`num mt-1.5 text-2xl font-bold tracking-tight sm:text-[28px] ${m.tone}`}>
               {m.value}
             </div>
-            <div className="mt-1 text-[11px] text-slate-400">{m.sub}</div>
+            <div className="mt-1 text-[11px] text-cream-500">{m.sub}</div>
           </div>
         ))}
       </div>

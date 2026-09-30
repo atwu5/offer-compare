@@ -55,11 +55,14 @@ export default function App() {
   return (
     <div className="min-h-screen">
       {/* 顶部导航 */}
-      <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/85 backdrop-blur">
+      <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-ink-950/85 backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1180px] items-center justify-between gap-3 px-4 py-2.5 sm:px-6">
           <div className="flex items-baseline gap-2.5">
-            <span className="text-[15px] font-bold text-slate-900">Offer 到手对比</span>
-            <span className="hidden text-xs text-slate-400 sm:inline">
+            <div className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-gold-400 shadow-[0_0_8px_rgba(226,195,104,0.9)]" />
+              <span className="text-[15px] font-bold tracking-wide text-cream-50">Offer 到手对比</span>
+            </div>
+            <span className="hidden text-xs text-cream-500 sm:inline">
               别只看月薪，算清这个 Offer 到底涨了多少
             </span>
           </div>
@@ -67,21 +70,21 @@ export default function App() {
             <button
               type="button"
               onClick={resetOffers}
-              className="rounded-lg px-3 py-1.5 text-[13px] font-medium text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
+              className="rounded-lg border border-white/10 px-3 py-1.5 text-[13px] font-medium text-cream-300 transition hover:border-gold-500/40 hover:text-gold-300"
             >
               重置
             </button>
             <button
               type="button"
               onClick={swapOffers}
-              className="rounded-lg px-3 py-1.5 text-[13px] font-medium text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
+              className="rounded-lg border border-white/10 px-3 py-1.5 text-[13px] font-medium text-cream-300 transition hover:border-gold-500/40 hover:text-gold-300"
             >
               ⇄ 交换
             </button>
             <button
               type="button"
               onClick={scrollToResults}
-              className="rounded-lg bg-indigo-600 px-3.5 py-1.5 text-[13px] font-medium text-white shadow-sm transition hover:bg-indigo-700"
+              className="gold-btn rounded-lg bg-gradient-to-b from-gold-300 to-gold-500 px-3.5 py-1.5 text-[13px] font-semibold text-ink-950 transition hover:from-gold-200 hover:to-gold-400"
             >
               查看 Offer 对比结果
             </button>
@@ -91,11 +94,14 @@ export default function App() {
 
       <main className="mx-auto max-w-[1180px] px-4 pb-16 sm:px-6">
         {/* 顶部产品介绍 */}
-        <section className="px-2 pb-6 pt-10 sm:pt-14">
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+        <section className="hero-glow -mx-4 px-4 pb-8 pt-12 sm:-mx-6 sm:px-6 sm:pt-16">
+          <div className="font-mono text-[11px] uppercase tracking-[0.35em] text-gold-500/90">
+            Offer · Real Income Comparator
+          </div>
+          <h1 className="gold-text mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
             Offer 到手对比
           </h1>
-          <p className="mt-3 max-w-2xl text-base leading-relaxed text-slate-500">
+          <p className="mt-3 max-w-2xl text-base leading-relaxed text-cream-300">
             别只看月薪，算清这个 Offer 到底涨了多少。比较不同城市、不同公司的 Offer：扣除个税、五险一金、
             生活成本，并考虑奖金、补贴与公积金之后，到底哪个更值得选。
           </p>
@@ -120,7 +126,7 @@ export default function App() {
                 type="button"
                 disabled
                 title="架构已预留多 Offer 支持，当前版本暂只支持 A / B 对比"
-                className="cursor-not-allowed rounded-lg border border-dashed border-slate-300 px-3 py-1.5 text-[13px] text-slate-400"
+                className="cursor-not-allowed rounded-lg border border-dashed border-white/15 px-3 py-1.5 text-[13px] text-cream-600"
               >
                 + 添加 Offer
               </button>
@@ -145,7 +151,7 @@ export default function App() {
             <button
               type="button"
               onClick={scrollToResults}
-              className="rounded-xl bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700"
+              className="gold-btn rounded-xl bg-gradient-to-b from-gold-300 to-gold-500 px-6 py-2.5 text-sm font-semibold text-ink-950 transition hover:from-gold-200 hover:to-gold-400"
             >
               查看 Offer 对比结果 ↓
             </button>
@@ -155,9 +161,9 @@ export default function App() {
         {/* 结果区 */}
         <div ref={resultsRef} className="scroll-mt-16 space-y-10">
           {/* 结果工具条 */}
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 rounded-2xl border border-slate-200 bg-white px-4 py-3">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 rounded-2xl border border-white/[0.08] bg-ink-850 px-4 py-3">
             <div className="flex items-center gap-2">
-              <span className="text-[13px] font-medium text-slate-500">场景</span>
+              <span className="text-[13px] font-medium text-cream-400">场景</span>
               <Segmented<ScenarioKey>
                 size="sm"
                 value={scenario}
@@ -170,7 +176,7 @@ export default function App() {
               />
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[13px] font-medium text-slate-500">期间</span>
+              <span className="text-[13px] font-medium text-cream-400">期间</span>
               <Segmented<YearView>
                 size="sm"
                 value={yearView}
@@ -181,7 +187,7 @@ export default function App() {
                 ]}
               />
             </div>
-            <span className="text-xs text-slate-400">以下结果随所选场景与期间实时更新</span>
+            <span className="text-xs text-cream-600">以下结果随所选场景与期间实时更新</span>
           </div>
 
           {/* 02 核心对比结论 */}
@@ -291,16 +297,16 @@ export default function App() {
                 {[offers[0], offers[1]].map((o, i) => {
                   const p = i === 0 ? policyA : policyB
                   return (
-                    <div key={o?.id ?? i} className="rounded-xl border border-slate-200 p-4">
+                    <div key={o?.id ?? i} className="rounded-xl border border-white/[0.08] bg-ink-900 p-4">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-semibold text-slate-800">
+                        <span className="text-sm font-semibold text-cream-100">
                           {p ? p.cityName : o?.cityCustomName || '其他城市'}
                         </span>
                         {p && <Badge tone={p.demo ? 'amber' : 'green'}>{p.demo ? '演示数据' : '已核验'}</Badge>}
                       </div>
                       {p ? (
                         <>
-                          <div className="mt-2 space-y-1 text-[13px] text-slate-500">
+                          <div className="mt-2 space-y-1 text-[13px] text-cream-400">
                             <div>政策版本：{p.version}</div>
                             <div className="num">生效日期：{p.effectiveDate}</div>
                             <div className="num">数据更新：{p.updatedAt}</div>
@@ -308,13 +314,13 @@ export default function App() {
                           <button
                             type="button"
                             onClick={() => setDrawerCity(p.cityCode)}
-                            className="mt-3 text-[13px] font-medium text-indigo-600 hover:underline"
+                            className="mt-3 text-[13px] font-medium text-gold-400 hover:text-gold-300 hover:underline"
                           >
                             查看完整参数 &gt;
                           </button>
                         </>
                       ) : (
-                        <p className="mt-2 text-[13px] text-slate-400">
+                        <p className="mt-2 text-[13px] text-cream-600">
                           无内置政策数据，使用手动填写参数。
                         </p>
                       )}
@@ -331,8 +337,8 @@ export default function App() {
       </main>
 
       {/* 页脚 */}
-      <footer className="border-t border-slate-200 bg-white">
-        <div className="mx-auto max-w-[1180px] space-y-2 px-4 py-6 text-xs leading-relaxed text-slate-400 sm:px-6">
+      <footer className="border-t border-white/[0.06] bg-ink-950">
+        <div className="mx-auto max-w-[1180px] space-y-2 px-4 py-6 text-xs leading-relaxed text-cream-600 sm:px-6">
           <p>
             本工具用于帮助求职者进行 Offer 收入测算和比较，实际收入会受公司缴费方式、个人所得税申报、专项附加扣除、
             奖金发放方式及最新地方政策影响。结果仅供决策参考，请以公司 HR、税务及当地官方政策为准。
@@ -350,8 +356,8 @@ export default function App() {
 function Assumption({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div>
-      <h4 className="text-sm font-semibold text-slate-800">{title}</h4>
-      <p className="mt-1 text-[13px] leading-relaxed text-slate-500">{children}</p>
+      <h4 className="text-sm font-semibold text-cream-100">{title}</h4>
+      <p className="mt-1 text-[13px] leading-relaxed text-cream-400">{children}</p>
     </div>
   )
 }
