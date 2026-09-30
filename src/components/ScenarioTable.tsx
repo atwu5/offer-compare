@@ -43,13 +43,13 @@ export function ScenarioTable({
                 <tr
                   key={s}
                   onClick={() => onPick(s)}
-                  className={`cursor-pointer border-t border-white/[0.07] transition hover:bg-ink-850/[0.04] ${
+                  className={`cursor-pointer border-t border-black/[0.06] transition hover:bg-black/[0.03] ${
                     active ? 'bg-gold-500/[0.07]' : ''
                   }`}
                 >
                   <td className="py-2.5 font-medium text-cream-200">
                     {SCENARIO_LABELS[s]}
-                    {active && <span className="ml-1.5 text-[11px] text-gold-400">当前</span>}
+                    {active && <span className="ml-1.5 text-[11px] text-gold-600">当前</span>}
                   </td>
                   <td className="num py-2.5 text-right text-cream-100">{fmtWan(ra.steadyYear.disposableCash)}</td>
                   <td className="num py-2.5 text-right font-semibold text-cream-50">{fmtWan(rb.steadyYear.disposableCash)}</td>

@@ -37,7 +37,7 @@ export function DifferenceBreakdown({
       </p>
 
       {rows.length === 0 ? (
-        <p className="rounded-xl bg-ink-850/[0.04] px-4 py-6 text-center text-sm text-cream-500">
+        <p className="rounded-xl bg-black/[0.03] px-4 py-6 text-center text-sm text-cream-500">
           两个 Offer 的收入与成本结构基本一致，没有明显差异项。
         </p>
       ) : (
@@ -67,17 +67,17 @@ export function DifferenceBreakdown({
 function DiffRowView({ row, maxAbs }: { row: DiffRow; maxAbs: number }) {
   const positive = row.amount > 0
   const widthPct = Math.min(100, (Math.abs(row.amount) / maxAbs) * 100)
-  const barColor = positive ? 'bg-emerald-400/70' : 'bg-red-400/70'
+  const barColor = positive ? 'bg-emerald-500/60' : 'bg-red-500/60'
   return (
     <div className="flex items-center gap-3">
       <div className="w-28 shrink-0 truncate text-[13px] text-cream-300 sm:w-36">{row.label}</div>
-      <div className="relative h-6 min-w-0 flex-1 overflow-hidden rounded-md bg-ink-850/[0.04]">
+      <div className="relative h-6 min-w-0 flex-1 overflow-hidden rounded-md bg-black/[0.03]">
         <div
           className={`h-full rounded-md transition-all duration-300 ${barColor}`}
           style={{ width: `${widthPct}%`, marginLeft: positive ? 0 : `${100 - widthPct}%` }}
         />
       </div>
-      <div className={`num w-24 shrink-0 text-right text-[13px] font-semibold ${positive ? 'text-emerald-400' : 'text-red-400'}`}>
+      <div className={`num w-24 shrink-0 text-right text-[13px] font-semibold ${positive ? 'text-emerald-600' : 'text-red-600'}`}>
         <Delta value={row.amount} />
       </div>
     </div>

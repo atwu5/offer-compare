@@ -40,7 +40,7 @@ export function SalaryReverseCalculator({
       </p>
 
       {!enabled ? (
-        <p className="mt-4 rounded-xl bg-ink-850/[0.04] px-4 py-6 text-center text-sm text-cream-500">
+        <p className="mt-4 rounded-xl bg-black/[0.03] px-4 py-6 text-center text-sm text-cream-500">
           请先完善两个 Offer 的输入，再使用谈薪反推。
         </p>
       ) : (
@@ -84,7 +84,7 @@ export function SalaryReverseCalculator({
                 <div className="text-sm text-cream-300">
                   要实现稳定年实际可支配收入提升 <b className="num">{fmtPctPlain(effectiveTarget, 0)}</b>：
                 </div>
-                <div className="num mt-1.5 text-2xl font-bold text-gold-300">
+                <div className="num mt-1.5 text-2xl font-bold text-gold-700">
                   {bName} 月薪至少约 {fmtCNY(result.minSalary)}
                 </div>
                 <div className="mt-1 text-[13px] text-cream-400">

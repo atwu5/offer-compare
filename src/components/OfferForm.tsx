@@ -11,7 +11,7 @@ const ACCENTS = {
     bar: 'bg-steel-400',
   },
   violet: {
-    chip: 'bg-gold-500/10 text-gold-300 border-gold-500/30',
+    chip: 'bg-gold-500/10 text-gold-700 border-gold-500/30',
     bar: 'bg-gold-400',
   },
 }
@@ -115,7 +115,7 @@ export function OfferForm({ tag, offer, policy, errors, accent, onChange, onOpen
             <button
               type="button"
               onClick={() => onOpenPolicy(offer.cityCode)}
-              className="mt-1.5 text-xs font-medium text-gold-400 hover:text-gold-300 hover:underline"
+              className="mt-1.5 text-xs font-medium text-gold-600 hover:text-gold-700 hover:underline"
             >
               使用 {policy?.version ?? '—'} 政策估算（演示数据）· 查看政策 &gt;
             </button>
@@ -170,7 +170,7 @@ export function OfferForm({ tag, offer, policy, errors, accent, onChange, onOpen
       </div>
 
       {/* 浮动奖金 */}
-      <div className="rounded-xl bg-ink-850/[0.04] p-3">
+      <div className="rounded-xl bg-black/[0.03] p-3">
         <Checkbox
           checked={offer.hasVariableBonus}
           onChange={(v) => onChange({ hasVariableBonus: v })}
@@ -254,7 +254,7 @@ export function OfferForm({ tag, offer, policy, errors, accent, onChange, onOpen
       </div>
 
       {/* 五险一金 */}
-      <div className="rounded-xl border border-white/10 p-3.5">
+      <div className="rounded-xl border border-black/10 p-3.5">
         <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <span className="text-sm font-semibold text-cream-100">五险一金</span>
@@ -270,7 +270,7 @@ export function OfferForm({ tag, offer, policy, errors, accent, onChange, onOpen
             <button
               type="button"
               onClick={() => onOpenPolicy(offer.cityCode)}
-              className="text-xs font-medium text-gold-400 hover:underline"
+              className="text-xs font-medium text-gold-600 hover:underline"
             >
               查看政策 &gt;
             </button>
@@ -313,7 +313,7 @@ export function OfferForm({ tag, offer, policy, errors, accent, onChange, onOpen
 
         {/* 高级设置 */}
         {(!offer.socialInsurance.useCityDefault || isCustomCity) && (
-          <div className="mt-3 space-y-3 border-t border-dashed border-white/10 pt-3">
+          <div className="mt-3 space-y-3 border-t border-dashed border-black/10 pt-3">
             <div className="text-xs font-semibold text-cream-400">手动参数（超出政策范围将自动按上下限计算）</div>
             <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-4">
               <BaseField
@@ -424,7 +424,7 @@ export function OfferForm({ tag, offer, policy, errors, accent, onChange, onOpen
                   ],
                 })
               }
-              className="rounded-full border border-dashed border-cream-600 px-2.5 py-1 text-xs text-cream-400 transition hover:border-gold-500/70 hover:text-gold-400"
+              className="rounded-full border border-dashed border-cream-600 px-2.5 py-1 text-xs text-cream-400 transition hover:border-gold-500/70 hover:text-gold-600"
             >
               + {p.name}
             </button>
@@ -473,7 +473,7 @@ function RadioRow({
       type="button"
       onClick={() => onChange(true)}
       className={`flex items-start gap-2 rounded-lg border px-3 py-2 text-left transition ${
-        checked ? 'border-gold-500/70 bg-gold-500/10' : 'border-white/10 bg-ink-850 hover:border-cream-600'
+        checked ? 'border-gold-500/70 bg-gold-500/10' : 'border-black/10 bg-ink-850 hover:border-cream-600'
       }`}
     >
       <span
@@ -605,7 +605,7 @@ function BaseField({
       <NumberInput prefix="¥" placeholder="0" value={value} onChange={onChange} />
       <div className="mt-1 min-h-[16px] text-[11px] leading-4">
         {clampNote ? (
-          <span className="text-amber-400">{clampNote}</span>
+          <span className="text-amber-600">{clampNote}</span>
         ) : min != null && max != null && max > min ? (
           <span className="text-cream-500">
             政策范围 {fmtCNY(min)}～{fmtCNY(max)}
@@ -651,7 +651,7 @@ function SubsidyRow({
 }) {
   const s = subsidy
   return (
-    <div className="rounded-xl border border-white/10 p-2.5">
+    <div className="rounded-xl border border-black/10 p-2.5">
       <div className="flex items-center gap-2">
         <div className="w-24 shrink-0">
           <TextInput value={s.name} onChange={(v) => onChange({ ...s, name: v })} placeholder="名称" />
@@ -667,7 +667,7 @@ function SubsidyRow({
         <button
           type="button"
           onClick={onRemove}
-          className="shrink-0 rounded-md px-1.5 py-1 text-cream-500 transition hover:bg-red-500/10 hover:text-red-500"
+          className="shrink-0 rounded-md px-1.5 py-1 text-cream-500 transition hover:bg-red-500/10 hover:text-red-600"
           title="删除"
         >
           ✕
@@ -714,7 +714,7 @@ function SubsidyRow({
           <Checkbox
             checked={s.included}
             onChange={(v) => onChange({ ...s, included: v })}
-            label={<span className="text-amber-300">我确认自己符合条件，可以计入核心结果</span>}
+            label={<span className="text-amber-700">我确认自己符合条件，可以计入核心结果</span>}
           />
         </div>
       )}

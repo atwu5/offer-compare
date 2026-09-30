@@ -15,9 +15,9 @@ export function PolicyDrawer({
 
   return (
     <div className="fixed inset-0 z-50">
-      <div className="fade-in absolute inset-0 bg-black/60" onClick={onClose} />
+      <div className="fade-in absolute inset-0 bg-black/35" onClick={onClose} />
       <aside className="drawer-in absolute right-0 top-0 h-full w-full max-w-md overflow-y-auto bg-ink-850 shadow-2xl">
-        <div className="sticky top-0 flex items-center justify-between border-b border-white/[0.07] bg-ink-850/95 px-5 py-4 backdrop-blur">
+        <div className="sticky top-0 flex items-center justify-between border-b border-black/[0.06] bg-white/95 px-5 py-4 backdrop-blur">
           <div>
             <h3 className="text-lg font-semibold text-cream-50">
               {policy ? policy.cityName : '其他城市'}五险一金参数
@@ -32,7 +32,7 @@ export function PolicyDrawer({
           <button
             type="button"
             onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-cream-500 transition hover:bg-ink-850/[0.07] hover:text-cream-300"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-cream-500 transition hover:bg-black/[0.05] hover:text-cream-300"
           >
             ✕
           </button>
@@ -40,13 +40,13 @@ export function PolicyDrawer({
 
         <div className="space-y-5 px-5 py-5">
           {!policy ? (
-            <p className="rounded-xl bg-ink-850/[0.04] px-4 py-6 text-center text-sm text-cream-400">
+            <p className="rounded-xl bg-black/[0.03] px-4 py-6 text-center text-sm text-cream-400">
               该城市暂无内置政策数据。请在 Offer 的五险一金设置中选择「我知道具体缴费基数」，手动填写比例与基数。
             </p>
           ) : (
             <>
               {policy.demo && (
-                <div className="rounded-xl border border-amber-500/[0.08]0/30 bg-amber-500/[0.08] px-3.5 py-2.5 text-[13px] leading-relaxed text-amber-300">
+                <div className="rounded-xl border border-amber-500/[0.08]0/30 bg-amber-500/[0.08] px-3.5 py-2.5 text-[13px] leading-relaxed text-amber-700">
                   ⚠️ 以下为<b>演示数据</b>，仅用于功能测试，请勿作为真实缴费依据。
                 </div>
               )}
@@ -57,7 +57,7 @@ export function PolicyDrawer({
 
               <div>
                 <h4 className="mb-2 text-sm font-semibold text-cream-100">住房公积金</h4>
-                <dl className="divide-y divide-white/[0.07] rounded-xl border border-white/10 text-sm">
+                <dl className="divide-y divide-black/[0.06] rounded-xl border border-black/10 text-sm">
                   <Row
                     label="个人比例（默认）"
                     value={`${rateLabel(policy.housingFund.employeeRateDefault)}（允许 ${rateLabel(policy.housingFund.rateMin)}～${rateLabel(policy.housingFund.rateMax)}）`}
@@ -74,7 +74,7 @@ export function PolicyDrawer({
                 </p>
               </div>
 
-              <div className="rounded-xl bg-ink-850/[0.04] p-4 text-[13px] text-cream-300">
+              <div className="rounded-xl bg-black/[0.03] p-4 text-[13px] text-cream-300">
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <div className="text-xs text-cream-500">政策生效</div>
@@ -91,11 +91,11 @@ export function PolicyDrawer({
                     policy.sources.map((s, i) => (
                       <div key={i}>
                         {s.url ? (
-                          <a href={s.url} target="_blank" rel="noreferrer" className="font-medium text-gold-400 hover:underline">
+                          <a href={s.url} target="_blank" rel="noreferrer" className="font-medium text-gold-600 hover:underline">
                             {s.name}（查看原文）&gt;
                           </a>
                         ) : (
-                          <span className="text-amber-300">{s.name}</span>
+                          <span className="text-amber-700">{s.name}</span>
                         )}
                       </div>
                     ))
@@ -117,7 +117,7 @@ function InsuranceBlock({ title, p }: { title: string; p: CityPolicy['pension'] 
   return (
     <div>
       <h4 className="mb-2 text-sm font-semibold text-cream-100">{title}</h4>
-      <dl className="divide-y divide-white/[0.07] rounded-xl border border-white/10 text-sm">
+      <dl className="divide-y divide-black/[0.06] rounded-xl border border-black/10 text-sm">
         <Row label="个人比例" value={rateLabel(p.employeeRate)} />
         <Row label="单位比例" value={rateLabel(p.employerRate)} />
         <Row label="基数下限" value={fmtCNY(p.baseMin)} />

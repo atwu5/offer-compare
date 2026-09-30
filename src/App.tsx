@@ -55,7 +55,7 @@ export default function App() {
   return (
     <div className="min-h-screen">
       {/* 顶部导航 */}
-      <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-ink-950/85 backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b border-black/[0.05] bg-ink-950/85 backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1180px] items-center justify-between gap-3 px-4 py-2.5 sm:px-6">
           <div className="flex items-baseline gap-2.5">
             <div className="flex items-center gap-2">
@@ -70,21 +70,21 @@ export default function App() {
             <button
               type="button"
               onClick={resetOffers}
-              className="rounded-lg border border-white/10 px-3 py-1.5 text-[13px] font-medium text-cream-300 transition hover:border-gold-500/40 hover:text-gold-300"
+              className="rounded-lg border border-black/10 px-3 py-1.5 text-[13px] font-medium text-cream-300 transition hover:border-gold-500/40 hover:text-gold-700"
             >
               重置
             </button>
             <button
               type="button"
               onClick={swapOffers}
-              className="rounded-lg border border-white/10 px-3 py-1.5 text-[13px] font-medium text-cream-300 transition hover:border-gold-500/40 hover:text-gold-300"
+              className="rounded-lg border border-black/10 px-3 py-1.5 text-[13px] font-medium text-cream-300 transition hover:border-gold-500/40 hover:text-gold-700"
             >
               ⇄ 交换
             </button>
             <button
               type="button"
               onClick={scrollToResults}
-              className="gold-btn rounded-lg bg-gradient-to-b from-gold-300 to-gold-500 px-3.5 py-1.5 text-[13px] font-semibold text-ink-950 transition hover:from-gold-200 hover:to-gold-400"
+              className="gold-btn rounded-lg bg-gradient-to-b from-gold-300 to-gold-500 px-3.5 py-1.5 text-[13px] font-semibold text-[#2B210A] transition hover:from-gold-200 hover:to-gold-400"
             >
               查看 Offer 对比结果
             </button>
@@ -126,7 +126,7 @@ export default function App() {
                 type="button"
                 disabled
                 title="架构已预留多 Offer 支持，当前版本暂只支持 A / B 对比"
-                className="cursor-not-allowed rounded-lg border border-dashed border-white/15 px-3 py-1.5 text-[13px] text-cream-600"
+                className="cursor-not-allowed rounded-lg border border-dashed border-black/15 px-3 py-1.5 text-[13px] text-cream-600"
               >
                 + 添加 Offer
               </button>
@@ -151,7 +151,7 @@ export default function App() {
             <button
               type="button"
               onClick={scrollToResults}
-              className="gold-btn rounded-xl bg-gradient-to-b from-gold-300 to-gold-500 px-6 py-2.5 text-sm font-semibold text-ink-950 transition hover:from-gold-200 hover:to-gold-400"
+              className="gold-btn rounded-xl bg-gradient-to-b from-gold-300 to-gold-500 px-6 py-2.5 text-sm font-semibold text-[#2B210A] transition hover:from-gold-200 hover:to-gold-400"
             >
               查看 Offer 对比结果 ↓
             </button>
@@ -161,7 +161,7 @@ export default function App() {
         {/* 结果区 */}
         <div ref={resultsRef} className="scroll-mt-16 space-y-10">
           {/* 结果工具条 */}
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 rounded-2xl border border-white/[0.08] bg-ink-850 px-4 py-3">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 rounded-2xl border border-black/[0.07] bg-ink-850 px-4 py-3">
             <div className="flex items-center gap-2">
               <span className="text-[13px] font-medium text-cream-400">场景</span>
               <Segmented<ScenarioKey>
@@ -297,7 +297,7 @@ export default function App() {
                 {[offers[0], offers[1]].map((o, i) => {
                   const p = i === 0 ? policyA : policyB
                   return (
-                    <div key={o?.id ?? i} className="rounded-xl border border-white/[0.08] bg-ink-900 p-4">
+                    <div key={o?.id ?? i} className="rounded-xl border border-black/[0.07] bg-ink-900 p-4">
                       <div className="flex items-center justify-between">
                         <span className="text-sm font-semibold text-cream-100">
                           {p ? p.cityName : o?.cityCustomName || '其他城市'}
@@ -314,7 +314,7 @@ export default function App() {
                           <button
                             type="button"
                             onClick={() => setDrawerCity(p.cityCode)}
-                            className="mt-3 text-[13px] font-medium text-gold-400 hover:text-gold-300 hover:underline"
+                            className="mt-3 text-[13px] font-medium text-gold-600 hover:text-gold-700 hover:underline"
                           >
                             查看完整参数 &gt;
                           </button>
@@ -337,7 +337,7 @@ export default function App() {
       </main>
 
       {/* 页脚 */}
-      <footer className="border-t border-white/[0.06] bg-ink-950">
+      <footer className="border-t border-black/[0.05] bg-ink-950">
         <div className="mx-auto max-w-[1180px] space-y-2 px-4 py-6 text-xs leading-relaxed text-cream-600 sm:px-6">
           <p>
             本工具用于帮助求职者进行 Offer 收入测算和比较，实际收入会受公司缴费方式、个人所得税申报、专项附加扣除、
