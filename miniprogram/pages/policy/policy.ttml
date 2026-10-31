@@ -1,0 +1,67 @@
+<view class="wrap">
+  <block tt:if="{{!hasPolicy}}">
+    <view class="card empty-card">
+      <view class="strong">{{cityName}}</view>
+      <view class="tiny muted mt8">该城市暂无内置政策数据。请在 Offer 的五险一金设置中选择「我知道具体缴费基数」，手动填写比例与基数。</view>
+    </view>
+  </block>
+
+  <block tt:if="{{hasPolicy}}">
+    <view class="head-row">
+      <view>
+        <view class="page-title">{{cityName}}五险一金参数</view>
+        <view class="row-gap mt8">
+          <text class="badge {{demo ? 'badge-amber' : 'badge-green'}}">{{demo ? '演示数据 · 未核验' : '已核验'}}</text>
+          <text class="tiny muted">{{version}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view tt:if="{{demo}}" class="alert alert-warn">⚠️ 以下为演示数据，仅用于功能测试，请勿作为真实缴费依据。</view>
+
+    <view tt:for="{{blocks}}" tt:for-item="b" tt:key="b.title" class="card block-card">
+      <view class="block-title">{{b.title}}</view>
+      <view class="row-list">
+        <view tt:for="{{b.rows}}" tt:for-item="r" tt:key="r.label" class="row-line">
+          <text class="row-label">{{r.label}}</text>
+          <text class="row-value num">{{r.value}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="card block-card">
+      <view class="block-title">住房公积金</view>
+      <view class="row-list">
+        <view tt:for="{{fundRows}}" tt:for-item="r" tt:key="r.label" class="row-line">
+          <text class="row-label">{{r.label}}</text>
+          <text class="row-value num">{{r.value}}</text>
+        </view>
+      </view>
+      <view class="tiny muted mt8">个人与单位缴存均进入你的公积金账户；个人缴存部分免征个税。</view>
+    </view>
+
+    <view class="card block-card">
+      <view class="grid-2">
+        <view>
+          <view class="tiny muted">政策生效</view>
+          <view class="num strong">{{effectiveDate}}</view>
+        </view>
+        <view>
+          <view class="tiny muted">数据更新</view>
+          <view class="num strong">{{updatedAt}}</view>
+        </view>
+      </view>
+      <view class="mt12">
+        <view class="tiny muted">政策来源</view>
+        <block tt:if="{{sources.length > 0}}">
+          <view tt:for="{{sources}}" tt:for-item="src" tt:key="src.name" class="mt4">
+            <text tt:if="{{src.url}}" class="link-line" bindtap="onCopyLink" data-url="{{src.url}}">{{src.name}}（复制原文链接）></text>
+            <text tt:if="{{!src.url}}" class="tiny warn-text">{{src.name}}</text>
+          </view>
+        </block>
+        <text tt:if="{{sources.length === 0}}" class="tiny muted">—</text>
+      </view>
+      <view tt:if="{{notes}}" class="tiny muted mt8">{{notes}}</view>
+    </view>
+  </block>
+</view>

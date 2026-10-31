@@ -1,0 +1,785 @@
+<view class="page">
+
+  <!-- ================= 顶部品牌区 ================= -->
+  <view class="hero">
+    <view class="hero-eyebrow">OFFER · REAL INCOME COMPARATOR</view>
+    <view class="hero-title">Offer 到手对比</view>
+    <view class="hero-sub">别只看月薪，算清这个 Offer 到底涨了多少。比较不同城市、不同公司的 Offer：扣除个税、五险一金、生活成本，并考虑奖金、补贴与公积金之后，到底哪个更值得选。</view>
+    <view class="hero-badges">
+      <text class="badge badge-gold">三个钱包看全收入</text>
+      <text class="badge badge-gold">每一分钱可溯源</text>
+      <text class="badge badge-gold">本地计算，数据不上传</text>
+    </view>
+    <view class="alert alert-warn hero-alert">{{policyNotice}}</view>
+    <view class="hero-actions">
+      <view class="btn btn-ghost hero-btn" bindtap="onReset">重置</view>
+      <view class="btn btn-ghost hero-btn" bindtap="onSwap">⇄ 交换</view>
+      <view class="btn btn-gold hero-btn" bindtap="onGoResults">查看对比结果</view>
+    </view>
+  </view>
+
+  <view class="content">
+
+    <!-- ================= 01 填写两个 Offer ================= -->
+    <view class="sec-head">
+      <text class="sec-index">01</text>
+      <text class="sec-title">填写两个 Offer</text>
+    </view>
+    <view class="sec-desc">只填你确定知道的信息，五险一金由城市政策自动带出；所有结果随输入实时更新。</view>
+
+    <block tt:for="{{[0, 1]}}" tt:for-index="i" tt:key="*this">
+
+      <view class="card offer-card">
+        <!-- 头部：A/B 标签 + 名称 -->
+        <view class="offer-head">
+          <view class="offer-tag {{i === 0 ? 'tag-a' : 'tag-b'}}">{{i === 0 ? 'A' : 'B'}}</view>
+          <input
+            class="offer-name-input"
+            value="{{draft[i].name}}"
+            placeholder="Offer 名称"
+            bindinput="onTextInput"
+            data-i="{{i}}"
+            data-path="name"
+            data-dp="name"
+          />
+        </view>
+        <view class="input-box offer-company">
+          <input
+            class="input-core"
+            value="{{draft[i].companyName}}"
+            placeholder="公司名称（选填）"
+            bindinput="onTextInput"
+            data-i="{{i}}"
+            data-path="companyName"
+            data-dp="companyName"
+          />
+        </view>
+
+        <!-- 输入错误 -->
+        <view tt:if="{{errors[i].length > 0}}" class="alert alert-error offer-errors">
+          <view tt:for="{{errors[i]}}" tt:for-item="err" tt:for-index="ei" tt:key="*this" class="err-line">· {{err}}</view>
+        </view>
+
+        <!-- 基础信息 -->
+        <view class="grid-2">
+          <view class="field">
+            <view class="field-label">工作城市</view>
+            <picker mode="selector" range="{{cityLabels}}" value="{{draft[i].cityIndex}}" bindchange="onCityPick" data-i="{{i}}">
+              <view class="select-box">
+                <text class="select-value">{{draft[i].cityLabel}}</text>
+                <text class="select-arrow">▾</text>
+              </view>
+            </picker>
+            <block tt:if="{{draft[i].isCustom}}">
+              <view class="input-box mt8">
+                <input
+                  class="input-core"
+                  value="{{draft[i].cityCustomName}}"
+                  placeholder="填写城市名称，如：苏州"
+                  bindinput="onTextInput"
+                  data-i="{{i}}"
+                  data-path="cityCustomName"
+                  data-dp="cityCustomName"
+                />
+              </view>
+            </block>
+            <view tt:if="{{!draft[i].isCustom && draft[i].hasPolicy}}" class="link-line" bindtap="onOpenPolicy" data-city="{{offers[i].cityCode}}">
+              按当地政策估算（演示数据）· 查看政策 >
+            </view>
+          </view>
+
+          <view class="field">
+            <view class="field-label">税前月薪</view>
+            <view class="input-box {{vm && vm.badges[i].salaryInvalid ? 'input-invalid' : ''}}">
+              <text class="input-prefix">¥</text>
+              <input
+                class="input-core num"
+                type="digit"
+                value="{{draft[i].monthlySalary}}"
+                placeholder="25,000"
+                bindinput="onNumInput"
+                data-i="{{i}}"
+                data-path="monthlySalary"
+                data-dp="monthlySalary"
+              />
+              <text class="input-suffix">/ 月</text>
+            </view>
+          </view>
+
+          <view class="field">
+            <view class="field-label">全年固定工资月数</view>
+            <picker mode="selector" range="{{monthsOptions}}" value="{{draft[i].monthsIndex}}" bindchange="onMonthsPick" data-i="{{i}}">
+              <view class="select-box">
+                <text class="select-value">{{draft[i].monthsLabel}}</text>
+                <text class="select-arrow">▾</text>
+              </view>
+            </picker>
+            <view tt:if="{{draft[i].monthsMode === 'custom'}}" class="input-box mt8">
+              <input
+                class="input-core num"
+                type="number"
+                value="{{draft[i].monthsCustom}}"
+                placeholder="13"
+                bindinput="onMonthsCustom"
+                data-i="{{i}}"
+              />
+              <text class="input-suffix">个月</text>
+            </view>
+          </view>
+
+          <view class="field">
+            <view class="field-hint">如 HR 说 2 个月年终奖且写进 Offer，填这里；只口头说「大概 1～2 个月」的放浮动奖金</view>
+            <view class="field-label">固定奖金</view>
+            <view class="row-gap">
+              <view class="segmented">
+                <view class="segmented-item {{draft[i].bonusMode === 'amount' ? 'segmented-active' : ''}}" bindtap="onBonusModeTap" data-i="{{i}}" data-mode="amount">金额</view>
+                <view class="segmented-item {{draft[i].bonusMode === 'months' ? 'segmented-active' : ''}}" bindtap="onBonusModeTap" data-i="{{i}}" data-mode="months">月数</view>
+              </view>
+              <view class="input-box flex-1">
+                <text tt:if="{{draft[i].bonusMode === 'amount'}}" class="input-prefix">¥</text>
+                <input
+                  class="input-core num"
+                  type="digit"
+                  value="{{draft[i].bonusValue}}"
+                  placeholder="{{draft[i].bonusMode === 'amount' ? '30,000' : '2'}}"
+                  bindinput="onNumInput"
+                  data-i="{{i}}"
+                  data-path="fixedBonus.value"
+                  data-dp="bonusValue"
+                />
+                <text tt:if="{{draft[i].bonusMode === 'months'}}" class="input-suffix">个月工资</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 浮动奖金 -->
+        <view class="soft-block">
+          <view class="check-row" bindtap="onVbToggleTap" data-i="{{i}}">
+            <view class="check-box {{draft[i].hasVariableBonus ? 'check-on' : ''}}">
+              <text tt:if="{{draft[i].hasVariableBonus}}" class="check-mark">✓</text>
+            </view>
+            <text class="check-label">有浮动奖金（如「2～4 个月」）</text>
+          </view>
+          <view tt:if="{{draft[i].hasVariableBonus}}">
+            <view class="row-between mt12">
+              <text class="tiny muted">分别填写保守 / 正常 / 乐观值</text>
+              <view class="segmented">
+                <view class="segmented-item {{draft[i].vbMode === 'amount' ? 'segmented-active' : ''}}" bindtap="onVbModeTap" data-i="{{i}}" data-mode="amount">金额</view>
+                <view class="segmented-item {{draft[i].vbMode === 'months' ? 'segmented-active' : ''}}" bindtap="onVbModeTap" data-i="{{i}}" data-mode="months">月数</view>
+              </view>
+            </view>
+            <view class="grid-3 mt8">
+              <view>
+                <view class="tiny muted mb4">保守</view>
+                <view class="input-box">
+                  <text tt:if="{{draft[i].vbMode === 'amount'}}" class="input-prefix">¥</text>
+                  <input class="input-core num" type="digit" value="{{draft[i].vb[0]}}" placeholder="0" bindinput="onNumInput" data-i="{{i}}" data-path="variableBonus.conservative.value" data-dp="vb.0" />
+                  <text tt:if="{{draft[i].vbMode === 'months'}}" class="input-suffix">个月</text>
+                </view>
+              </view>
+              <view>
+                <view class="tiny muted mb4">正常</view>
+                <view class="input-box">
+                  <text tt:if="{{draft[i].vbMode === 'amount'}}" class="input-prefix">¥</text>
+                  <input class="input-core num" type="digit" value="{{draft[i].vb[1]}}" placeholder="0" bindinput="onNumInput" data-i="{{i}}" data-path="variableBonus.expected.value" data-dp="vb.1" />
+                  <text tt:if="{{draft[i].vbMode === 'months'}}" class="input-suffix">个月</text>
+                </view>
+              </view>
+              <view>
+                <view class="tiny muted mb4">乐观</view>
+                <view class="input-box">
+                  <text tt:if="{{draft[i].vbMode === 'amount'}}" class="input-prefix">¥</text>
+                  <input class="input-core num" type="digit" value="{{draft[i].vb[2]}}" placeholder="0" bindinput="onNumInput" data-i="{{i}}" data-path="variableBonus.optimistic.value" data-dp="vb.2" />
+                  <text tt:if="{{draft[i].vbMode === 'months'}}" class="input-suffix">个月</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 试用期 -->
+        <view class="grid-2">
+          <view class="field">
+            <view class="field-hint">入职第一年的试用期月数，折扣只影响首年收入</view>
+            <view class="field-label">试用期月数</view>
+            <view class="input-box">
+              <input class="input-core num" type="number" value="{{draft[i].probationMonths}}" placeholder="0" bindinput="onProbationMonths" data-i="{{i}}" />
+              <text class="input-suffix">个月（0 = 无）</text>
+            </view>
+          </view>
+          <view class="field">
+            <view class="field-label">试用期工资比例</view>
+            <picker mode="selector" range="{{ratioOptions}}" value="{{draft[i].ratioIndex}}" bindchange="onRatioPick" data-i="{{i}}">
+              <view class="select-box">
+                <text class="select-value">{{draft[i].ratioLabel}}</text>
+                <text class="select-arrow">▾</text>
+              </view>
+            </picker>
+            <view tt:if="{{draft[i].ratioMode === 'custom'}}" class="input-box mt8">
+              <input class="input-core num" type="digit" value="{{draft[i].ratioCustom}}" placeholder="90" bindinput="onRatioCustom" data-i="{{i}}" />
+              <text class="input-suffix">%</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 五险一金 -->
+        <view class="panel-block">
+          <view class="row-between mb8">
+            <view class="row-gap">
+              <text class="block-title">五险一金</text>
+              <text class="badge {{vm.badges[i].tone}}">{{vm.badges[i].text}}</text>
+            </view>
+            <view tt:if="{{!draft[i].isCustom && draft[i].hasPolicy}}" class="link-line" bindtap="onOpenPolicy" data-city="{{offers[i].cityCode}}">查看政策 ></view>
+          </view>
+
+          <block tt:if="{{draft[i].hasPolicy}}">
+            <view class="tiny muted">✓ 使用「{{vm.badges[i].cityName}}」当前政策估算</view>
+            <view class="grid-2 mt8">
+              <view class="radio-row {{draft[i].useCityDefault ? 'radio-on' : ''}}" bindtap="onSiModeTap" data-i="{{i}}" data-v="1">
+                <view class="radio-dot {{draft[i].useCityDefault ? 'radio-on' : ''}}">
+                  <view tt:if="{{draft[i].useCityDefault}}" class="radio-dot-inner"></view>
+                </view>
+                <view>
+                  <text class="radio-title">按工资实际金额估算</text>
+                  <text class="radio-desc">以当月实际工资作为缴费基数，按政策上下限自动调整</text>
+                </view>
+              </view>
+              <view class="radio-row {{!draft[i].useCityDefault ? 'radio-on' : ''}}" bindtap="onSiModeTap" data-i="{{i}}" data-v="0">
+                <view class="radio-dot {{!draft[i].useCityDefault ? 'radio-on' : ''}}">
+                  <view tt:if="{{!draft[i].useCityDefault}}" class="radio-dot-inner"></view>
+                </view>
+                <view>
+                  <text class="radio-title">我知道具体缴费基数</text>
+                  <text class="radio-desc">按公司实际申报基数手动填写（如按最低基数缴纳）</text>
+                </view>
+              </view>
+            </view>
+            <view tt:if="{{draft[i].useCityDefault}}" class="row-gap mt8">
+              <text class="tiny muted">公积金比例</text>
+              <picker class="flex-1" mode="selector" range="{{draft[i].hfRateOptions}}" value="{{draft[i].hfRateIndex}}" bindchange="onHfRatePick" data-i="{{i}}">
+                <view class="select-box">
+                  <text class="select-value">{{draft[i].hfRateLabel}}</text>
+                  <text class="select-arrow">▾</text>
+                </view>
+              </picker>
+            </view>
+          </block>
+          <view tt:if="{{!draft[i].hasPolicy}}" class="tiny muted">请在下方手动填写该城市的五险一金参数（比例与基数）</view>
+
+          <!-- 手动参数 -->
+          <view tt:if="{{!draft[i].useCityDefault || draft[i].isCustom}}" class="manual-block">
+            <view class="tiny strong muted mb8">手动参数（超出政策范围将自动按上下限计算）</view>
+            <view class="grid-2">
+              <view>
+                <view class="tiny muted mb4">养老基数</view>
+                <view class="input-box">
+                  <text class="input-prefix">¥</text>
+                  <input class="input-core num" type="digit" value="{{draft[i].pensionBase}}" placeholder="0" bindinput="onNumInput" data-i="{{i}}" data-path="socialInsurance.pensionBase" data-dp="pensionBase" />
+                </view>
+              </view>
+              <view>
+                <view class="tiny muted mb4">医疗基数</view>
+                <view class="input-box">
+                  <text class="input-prefix">¥</text>
+                  <input class="input-core num" type="digit" value="{{draft[i].medicalBase}}" placeholder="0" bindinput="onNumInput" data-i="{{i}}" data-path="socialInsurance.medicalBase" data-dp="medicalBase" />
+                </view>
+              </view>
+              <view>
+                <view class="tiny muted mb4">失业基数</view>
+                <view class="input-box">
+                  <text class="input-prefix">¥</text>
+                  <input class="input-core num" type="digit" value="{{draft[i].unemploymentBase}}" placeholder="0" bindinput="onNumInput" data-i="{{i}}" data-path="socialInsurance.unemploymentBase" data-dp="unemploymentBase" />
+                </view>
+              </view>
+              <view>
+                <view class="tiny muted mb4">公积金基数</view>
+                <view class="input-box">
+                  <text class="input-prefix">¥</text>
+                  <input class="input-core num" type="digit" value="{{draft[i].hfBase}}" placeholder="0" bindinput="onNumInput" data-i="{{i}}" data-path="housingFund.base" data-dp="hfBase" />
+                </view>
+              </view>
+            </view>
+
+            <block tt:if="{{draft[i].isCustom}}">
+              <view class="grid-2 mt8">
+                <view>
+                  <view class="tiny muted mb4">养老个人 %</view>
+                  <view class="input-box"><input class="input-core num" type="digit" value="{{draft[i].rates.pensionEmp}}" placeholder="8" bindinput="onRateInput" data-i="{{i}}" data-f="pensionEmp" data-mp="socialInsurance.pensionRates.employee" /><text class="input-suffix">%</text></view>
+                </view>
+                <view>
+                  <view class="tiny muted mb4">养老单位 %</view>
+                  <view class="input-box"><input class="input-core num" type="digit" value="{{draft[i].rates.pensionEr}}" placeholder="16" bindinput="onRateInput" data-i="{{i}}" data-f="pensionEr" data-mp="socialInsurance.pensionRates.employer" /><text class="input-suffix">%</text></view>
+                </view>
+                <view>
+                  <view class="tiny muted mb4">医疗个人 %</view>
+                  <view class="input-box"><input class="input-core num" type="digit" value="{{draft[i].rates.medicalEmp}}" placeholder="2" bindinput="onRateInput" data-i="{{i}}" data-f="medicalEmp" data-mp="socialInsurance.medicalRates.employee" /><text class="input-suffix">%</text></view>
+                </view>
+                <view>
+                  <view class="tiny muted mb4">医疗单位 %</view>
+                  <view class="input-box"><input class="input-core num" type="digit" value="{{draft[i].rates.medicalEr}}" placeholder="8" bindinput="onRateInput" data-i="{{i}}" data-f="medicalEr" data-mp="socialInsurance.medicalRates.employer" /><text class="input-suffix">%</text></view>
+                </view>
+                <view>
+                  <view class="tiny muted mb4">失业个人 %</view>
+                  <view class="input-box"><input class="input-core num" type="digit" value="{{draft[i].rates.unempEmp}}" placeholder="0.2" bindinput="onRateInput" data-i="{{i}}" data-f="unempEmp" data-mp="socialInsurance.unemploymentRates.employee" /><text class="input-suffix">%</text></view>
+                </view>
+                <view>
+                  <view class="tiny muted mb4">失业单位 %</view>
+                  <view class="input-box"><input class="input-core num" type="digit" value="{{draft[i].rates.unempEr}}" placeholder="0.8" bindinput="onRateInput" data-i="{{i}}" data-f="unempEr" data-mp="socialInsurance.unemploymentRates.employer" /><text class="input-suffix">%</text></view>
+                </view>
+                <view>
+                  <view class="tiny muted mb4">公积金个人 %</view>
+                  <view class="input-box"><input class="input-core num" type="digit" value="{{draft[i].rates.hfEmp}}" placeholder="12" bindinput="onRateInput" data-i="{{i}}" data-f="hfEmp" data-mp="housingFund.employeeRate" /><text class="input-suffix">%</text></view>
+                </view>
+                <view>
+                  <view class="tiny muted mb4">公积金单位 %</view>
+                  <view class="input-box"><input class="input-core num" type="digit" value="{{draft[i].rates.hfEr}}" placeholder="12" bindinput="onRateInput" data-i="{{i}}" data-f="hfEr" data-mp="housingFund.employerRate" /><text class="input-suffix">%</text></view>
+                </view>
+              </view>
+            </block>
+            <block tt:if="{{!draft[i].isCustom && draft[i].hasPolicy}}">
+              <view class="grid-2 mt8">
+                <view>
+                  <view class="tiny muted mb4">公积金个人 %</view>
+                  <view class="input-box"><input class="input-core num" type="digit" value="{{draft[i].rates.hfEmp}}" placeholder="默认" bindinput="onRateInput" data-i="{{i}}" data-f="hfEmp" data-mp="housingFund.employeeRate" /><text class="input-suffix">%</text></view>
+                </view>
+                <view>
+                  <view class="tiny muted mb4">公积金单位 %</view>
+                  <view class="input-box"><input class="input-core num" type="digit" value="{{draft[i].rates.hfEr}}" placeholder="默认" bindinput="onRateInput" data-i="{{i}}" data-f="hfEr" data-mp="housingFund.employerRate" /><text class="input-suffix">%</text></view>
+                </view>
+              </view>
+              <view class="tiny muted mt8">留空则使用政策默认比例（社保比例按城市政策自动计算）</view>
+            </block>
+          </view>
+        </view>
+
+        <!-- 专项附加扣除 -->
+        <view class="field">
+          <view class="field-hint">如子女教育、住房租金、住房贷款利息、赡养老人等，可填写预计每月可扣除金额</view>
+          <view class="field-label">每月专项附加扣除（个税）</view>
+          <view class="input-box">
+            <text class="input-prefix">¥</text>
+            <input class="input-core num" type="digit" value="{{draft[i].specialDeduction}}" placeholder="0" bindinput="onNumInput" data-i="{{i}}" data-path="monthlySpecialTaxDeduction" data-dp="specialDeduction" />
+            <text class="input-suffix">/ 月</text>
+          </view>
+        </view>
+
+        <!-- 现金补贴 -->
+        <view class="field">
+          <view class="field-hint">「可能获得」的补贴默认不计入核心结果，勾选确认后才计入</view>
+          <view class="row-between">
+            <view class="field-label">现金补贴</view>
+            <text class="tiny muted">{{draft[i].subsidies.length}} 项</text>
+          </view>
+
+          <view tt:for="{{draft[i].subsidies}}" tt:for-item="s" tt:for-index="si" tt:key="s.id" class="subsidy-row">
+            <view class="row-gap">
+              <view class="input-box subsidy-name">
+                <input class="input-core" value="{{s.name}}" placeholder="名称" bindinput="onSubsidyName" data-i="{{i}}" data-si="{{si}}" />
+              </view>
+              <view class="input-box flex-1">
+                <text class="input-prefix">¥</text>
+                <input class="input-core num" type="digit" value="{{s.amount}}" placeholder="金额" bindinput="onSubsidyAmount" data-i="{{i}}" data-si="{{si}}" />
+              </view>
+              <view class="subsidy-del" bindtap="onSubsidyRemove" data-i="{{i}}" data-si="{{si}}">✕</view>
+            </view>
+            <view class="grid-3 mt8">
+              <picker mode="selector" range="{{freqOptions}}" value="{{s.freqIndex}}" bindchange="onSubsidyFreqPick" data-i="{{i}}" data-si="{{si}}">
+                <view class="select-box"><text class="select-value">{{s.freqLabel}}</text><text class="select-arrow">▾</text></view>
+              </picker>
+              <picker mode="selector" range="{{durOptions}}" value="{{s.durIndex}}" bindchange="onSubsidyDurPick" data-i="{{i}}" data-si="{{si}}">
+                <view class="select-box"><text class="select-value">{{s.durLabel}}</text><text class="select-arrow">▾</text></view>
+              </picker>
+              <picker tt:if="{{s.dur !== 'years'}}" mode="selector" range="{{certOptions}}" value="{{s.certIndex}}" bindchange="onSubsidyCertPick" data-i="{{i}}" data-si="{{si}}">
+                <view class="select-box"><text class="select-value">{{s.certLabel}}</text><text class="select-arrow">▾</text></view>
+              </picker>
+              <view tt:if="{{s.dur === 'years'}}" class="input-box">
+                <input class="input-core num" type="number" value="{{s.durationYears}}" placeholder="1" bindinput="onSubsidyYears" data-i="{{i}}" data-si="{{si}}" />
+                <text class="input-suffix">年</text>
+              </view>
+            </view>
+            <view tt:if="{{s.cert === 'possible'}}" class="check-row mt8" bindtap="onSubsidyIncludedTap" data-i="{{i}}" data-si="{{si}}">
+              <view class="check-box {{s.included ? 'check-on' : ''}}">
+                <text tt:if="{{s.included}}" class="check-mark">✓</text>
+              </view>
+              <text class="check-label warn-text">我确认自己符合条件，可以计入核心结果</text>
+            </view>
+          </view>
+
+          <view class="preset-row">
+            <view tt:for="{{subsidyPresets}}" tt:for-item="pn" tt:for-index="pi" tt:key="*this" class="preset-chip" bindtap="onSubsidyAdd" data-i="{{i}}" data-p="{{pi}}">+ {{pn}}</view>
+          </view>
+        </view>
+
+        <!-- 生活成本 -->
+        <view class="field">
+          <view class="field-hint">只填写因为换工作而变化的部分，例如新城市房租减去现城市房租</view>
+          <view class="field-label">工作变化带来的额外成本（元 / 月）</view>
+          <view class="grid-3">
+            <view>
+              <view class="tiny muted mb4">房租</view>
+              <view class="input-box"><text class="input-prefix">¥</text><input class="input-core num" type="digit" value="{{draft[i].living[0]}}" placeholder="0" bindinput="onNumInput" data-i="{{i}}" data-path="livingCosts.housing" data-dp="living.0" /></view>
+            </view>
+            <view>
+              <view class="tiny muted mb4">通勤</view>
+              <view class="input-box"><text class="input-prefix">¥</text><input class="input-core num" type="digit" value="{{draft[i].living[1]}}" placeholder="0" bindinput="onNumInput" data-i="{{i}}" data-path="livingCosts.commute" data-dp="living.1" /></view>
+            </view>
+            <view>
+              <view class="tiny muted mb4">餐饮</view>
+              <view class="input-box"><text class="input-prefix">¥</text><input class="input-core num" type="digit" value="{{draft[i].living[2]}}" placeholder="0" bindinput="onNumInput" data-i="{{i}}" data-path="livingCosts.food" data-dp="living.2" /></view>
+            </view>
+            <view>
+              <view class="tiny muted mb4">异地往返</view>
+              <view class="input-box"><text class="input-prefix">¥</text><input class="input-core num" type="digit" value="{{draft[i].living[3]}}" placeholder="0" bindinput="onNumInput" data-i="{{i}}" data-path="livingCosts.travel" data-dp="living.3" /></view>
+            </view>
+            <view>
+              <view class="tiny muted mb4">其他</view>
+              <view class="input-box"><text class="input-prefix">¥</text><input class="input-core num" type="digit" value="{{draft[i].living[4]}}" placeholder="0" bindinput="onNumInput" data-i="{{i}}" data-path="livingCosts.other" data-dp="living.4" /></view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <view class="center-btn" bindtap="onGoResults">
+      <view class="btn btn-gold wide-btn">查看 Offer 对比结果 ↓</view>
+    </view>
+
+    <!-- ================= 结果区 ================= -->
+    <view id="results" class="results-anchor"></view>
+
+    <block tt:if="{{vmReady && vm}}">
+      <!-- 结果工具条 -->
+      <view class="toolbar">
+        <view class="row-gap">
+          <text class="toolbar-label">场景</text>
+          <view class="segmented">
+            <view class="segmented-item {{scenario === 'conservative' ? 'segmented-active' : ''}}" bindtap="onScenarioTap" data-s="conservative">保守</view>
+            <view class="segmented-item {{scenario === 'expected' ? 'segmented-active' : ''}}" bindtap="onScenarioTap" data-s="expected">正常</view>
+            <view class="segmented-item {{scenario === 'optimistic' ? 'segmented-active' : ''}}" bindtap="onScenarioTap" data-s="optimistic">乐观</view>
+          </view>
+        </view>
+        <view class="row-gap">
+          <text class="toolbar-label">期间</text>
+          <view class="segmented">
+            <view class="segmented-item {{yearView === 'first' ? 'segmented-active' : ''}}" bindtap="onYearTap" data-y="first">首年</view>
+            <view class="segmented-item {{yearView === 'steady' ? 'segmented-active' : ''}}" bindtap="onYearTap" data-y="steady">稳定年</view>
+          </view>
+        </view>
+        <text class="tiny muted">结果随所选场景与期间实时更新</text>
+      </view>
+
+      <!-- 02 核心对比结论 -->
+      <view class="sec-head">
+        <text class="sec-index">02</text>
+        <text class="sec-title">核心对比结论</text>
+      </view>
+      <view class="card summary-card">
+        <block tt:if="{{vm.headline.hasData}}">
+          <view class="summary-head">
+            <view class="summary-title">{{vm.headline.title}}</view>
+            <view class="summary-sub">{{vm.headline.explanation}}</view>
+          </view>
+          <view class="metric-grid">
+            <view tt:for="{{vm.headline.metrics}}" tt:for-item="m" tt:for-index="mi" tt:key="*this" class="metric-cell {{m.hl ? 'metric-hl' : ''}}">
+              <view class="tiny muted">{{m.label}}</view>
+              <view class="metric-value num {{m.cls}}">{{m.value}}</view>
+              <view class="tiny muted">{{m.sub}}</view>
+            </view>
+          </view>
+        </block>
+        <view tt:if="{{!vm.headline.hasData}}" class="alert alert-info">
+          请先完善两个 Offer 的必填信息（目前存在输入错误或缺少参数），完善后这里会自动生成核心对比结论。
+        </view>
+      </view>
+
+      <!-- 03 收入波动场景 -->
+      <block tt:if="{{vm.hasResults}}">
+        <view class="sec-head">
+          <text class="sec-index">03</text>
+          <text class="sec-title">收入波动场景</text>
+        </view>
+        <view class="sec-desc">填写浮动奖金的保守 / 正常 / 乐观值后，自动对比三个场景。展示稳定年可支配现金，点击行可切换全页场景。</view>
+        <view class="card sc-table">
+          <view class="sc-row sc-head-row">
+            <text class="sc-cell">场景</text>
+            <text class="sc-cell sc-right">{{vm.colA}}</text>
+            <text class="sc-cell sc-right">{{vm.colB}}</text>
+          </view>
+          <view tt:for="{{vm.scenarioRows}}" tt:for-item="row" tt:key="row.key" class="sc-row {{row.active ? 'sc-active' : ''}}" bindtap="onScenarioTap" data-s="{{row.key}}">
+            <text class="sc-cell sc-label">{{row.label}}<text tt:if="{{row.active}}" class="sc-cur"> 当前</text></text>
+            <text class="sc-cell sc-right num">{{row.aText}}</text>
+            <text class="sc-cell sc-right num sc-strong">{{row.bText}}</text>
+          </view>
+          <view tt:if="{{vm.scenarioNote}}" class="sc-note">{{vm.scenarioNote}}</view>
+        </view>
+
+        <!-- 04 三个钱包 -->
+        <view class="sec-head">
+          <text class="sec-index">04</text>
+          <text class="sec-title">三个钱包</text>
+        </view>
+        <view class="sec-desc">总收入没有意义，拆成「现在能花的钱 / 不能随时花的钱 / 长期保障」才看得清。</view>
+
+        <view class="card wallet-card">
+          <view class="row-between">
+            <text class="wallet-title">💰 可支配现金</text>
+            <text class="tiny muted">{{yearView === 'first' ? '首年' : '稳定年'}}口径</text>
+          </view>
+          <view class="tiny muted">属于你、现在就能自由花的钱</view>
+          <view tt:for="{{vm.wallets.cash.rows}}" tt:for-item="r" tt:key="r.name" class="wallet-row">
+            <view class="row-between">
+              <text class="{{r.emphasize ? 'strong' : 'muted'}}">{{r.name}}</text>
+              <text class="num wallet-amt {{r.emphasize ? 'strong' : ''}}">{{r.amountText}}<text class="tiny muted"> / 年</text></text>
+            </view>
+            <view class="tiny muted">{{r.sub}}</view>
+          </view>
+          <view class="wallet-diff">
+            <text class="tiny muted">{{yearView === 'first' ? '首年' : '稳定年'}}差额：</text>
+            <text class="num strong {{vm.wallets.cash.diffCls}}">{{vm.wallets.cash.diffText}}</text>
+          </view>
+        </view>
+
+        <view class="card wallet-card">
+          <view class="row-between">
+            <text class="wallet-title">🏠 公积金账户增加</text>
+            <text class="tiny muted">{{yearView === 'first' ? '首年' : '稳定年'}}口径</text>
+          </view>
+          <view class="tiny muted">属于你，但不能随时花的钱（个人 + 单位）</view>
+          <view tt:for="{{vm.wallets.fund.rows}}" tt:for-item="r" tt:key="r.name" class="wallet-row">
+            <view class="row-between">
+              <text class="{{index === 1 ? 'strong' : 'muted'}}">{{r.name}}</text>
+              <text class="num strong">{{r.totalText}}</text>
+            </view>
+            <view class="tiny muted">{{r.sub}}</view>
+          </view>
+          <view class="wallet-diff">
+            <text class="tiny muted">{{yearView === 'first' ? '首年' : '稳定年'}}差额：</text>
+            <text class="num strong {{vm.wallets.fund.diffCls}}">{{vm.wallets.fund.diffText}}</text>
+            <view class="tiny muted mt4">个人缴纳虽减少当期现金，但会以「个人 + 单位」双倍进入你的公积金账户，不是损失。</view>
+          </view>
+        </view>
+
+        <view class="card wallet-card">
+          <view class="row-between">
+            <text class="wallet-title">🛡 长期保障</text>
+            <text class="tiny muted">稳定年口径</text>
+          </view>
+          <view class="tiny muted">社保缴费基础决定未来的保障水平</view>
+          <view tt:for="{{vm.wallets.security.rows}}" tt:for-item="r" tt:key="r.label" class="sec-row">
+            <text class="sec-label">{{r.label}}</text>
+            <text class="sec-values num"><text class="muted tiny">A </text>{{r.aText}}<text class="muted tiny"> · B </text>{{r.bText}}</text>
+          </view>
+          <view class="wallet-diff">
+            <text class="tiny muted">结论：</text>
+            <text class="strong">{{vm.wallets.security.verdict}}</text>
+            <view class="tiny muted mt4">单位养老缴费属于长期社会保障投入，不计入个人收入，也不折算成「保障价值」金额。</view>
+          </view>
+        </view>
+
+        <!-- 05 为什么差这么多 -->
+        <view class="sec-head">
+          <text class="sec-index">05</text>
+          <text class="sec-title">为什么差这么多</text>
+        </view>
+        <view class="card diff-card">
+          <view class="diff-title">{{vm.diffTitle}}</view>
+          <view class="tiny muted">{{vm.diff.subtitle}}</view>
+          <view class="tiny muted mt4">正向 = 让你多拿钱的变化，负向 = 让你少拿钱的变化。</view>
+
+          <block tt:if="{{vm.diff.empty}}">
+            <view class="diff-empty">两个 Offer 的收入与成本结构基本一致，没有明显差异项。</view>
+          </block>
+          <block tt:if="{{!vm.diff.empty}}">
+            <view tt:for="{{vm.diff.rows}}" tt:for-item="row" tt:key="row.key" class="diff-row">
+              <text class="diff-label">{{row.label}}</text>
+              <view class="diff-bar-track">
+                <view class="diff-bar {{row.cls === 'pos' ? 'bar-pos' : 'bar-neg'}}" style="width: {{row.widthPct}}%; margin-left: {{row.mlPct}}%;"></view>
+              </view>
+              <text class="diff-amt num {{row.cls}}">{{row.amountText}}</text>
+            </view>
+            <view class="diff-total">
+              <text class="strong">实际可支配收入{{vm.diff.totalCls === 'pos' ? '增加' : '减少'}}</text>
+              <text class="num diff-total-amt {{vm.diff.totalCls}}">{{vm.diff.totalText}}<text class="tiny muted"> / 年</text></text>
+            </view>
+            <view class="tiny muted diff-verify">{{vm.diff.verifyText}}</view>
+          </block>
+        </view>
+
+        <!-- 06 完整明细 -->
+        <view class="sec-head">
+          <text class="sec-index">06</text>
+          <text class="sec-title">完整收入明细与计算依据</text>
+        </view>
+        <view class="card detail-card">
+          <view class="strong">完整收入明细（{{vm.details.subtitle}}）</view>
+          <view class="tiny muted">每一行都可以展开查看「用了什么基数 × 什么比例 = 多少钱」以及政策来源。</view>
+
+          <block tt:if="{{vm.details.notices.length > 0}}">
+            <view class="alert alert-warn detail-notices">
+              <view class="strong">计算提示（未静默处理）</view>
+              <view tt:for="{{vm.details.notices}}" tt:for-item="n" tt:key="*this" class="err-line">· {{n}}</view>
+            </view>
+          </block>
+
+          <view class="d-head">
+            <text class="d-cell">项目</text>
+            <text class="d-cell d-right">{{vm.colA}}</text>
+            <text class="d-cell d-right">{{vm.colB}}</text>
+            <text class="d-cell d-chev-cell"></text>
+          </view>
+
+          <block tt:for="{{vm.details.rows}}" tt:for-item="row" tt:key="row.key">
+            <view tt:if="{{row.groupTitle}}" class="d-group">{{row.groupTitle}}</view>
+            <view class="d-row {{row.emphasisCls}}" bindtap="onDetailToggle" data-key="{{row.key}}">
+              <view class="d-cell d-name">
+                <text class="{{row.emphasisCls === 'row-strong' ? 'strong' : ''}}">{{row.name}}</text>
+                <text tt:if="{{row.hasDot}}" class="d-dot">●</text>
+              </view>
+              <text class="d-cell d-right num {{row.aPresent ? '' : 'muted'}}">{{row.aText}}</text>
+              <text class="d-cell d-right num {{row.bPresent ? '' : 'muted'}}">{{row.bText}}</text>
+              <view class="d-cell d-chev-cell">
+                <text class="d-chev {{row.open ? 'd-chev-open' : ''}}">▾</text>
+              </view>
+            </view>
+            <view tt:if="{{row.open}}" class="d-panel">
+              <view tt:if="{{row.panelA}}" class="d-side">
+                <view class="row-between mb4">
+                  <text class="badge badge-gold">{{vm.offerNames[0]}}</text>
+                  <text class="num strong {{row.panelA.neg ? 'neg' : ''}}">{{row.panelA.amountText}}<text class="tiny muted"> /年</text></text>
+                </view>
+                <view class="d-formula">{{row.panelA.formula}}</view>
+                <view tt:if="{{row.panelA.params.length > 0}}">
+                  <view tt:for="{{row.panelA.params}}" tt:for-item="p" tt:key="p.label" class="d-param">
+                    <text class="tiny muted">{{p.label}}</text>
+                    <text class="tiny num">{{p.value}}</text>
+                  </view>
+                </view>
+                <view tt:if="{{row.panelA.notices.length > 0}}" class="d-notices">
+                  <view tt:for="{{row.panelA.notices}}" tt:for-item="n" tt:key="*this" class="err-line warn-text">· {{n}}</view>
+                </view>
+                <view class="d-source">
+                  <text class="tiny muted">{{row.panelA.sourceLine}}</text>
+                  <view tt:if="{{row.panelA.url}}" class="link-line" bindtap="onCopyLink" data-url="{{row.panelA.url}}">复制原文链接</view>
+                </view>
+              </view>
+              <view tt:if="{{!row.panelA}}" class="d-side"><text class="tiny muted">该项不适用于 {{vm.offerNames[0]}}。</text></view>
+              <view tt:if="{{row.panelB}}" class="d-side">
+                <view class="row-between mb4">
+                  <text class="badge badge-gold">{{vm.offerNames[1]}}</text>
+                  <text class="num strong {{row.panelB.neg ? 'neg' : ''}}">{{row.panelB.amountText}}<text class="tiny muted"> /年</text></text>
+                </view>
+                <view class="d-formula">{{row.panelB.formula}}</view>
+                <view tt:if="{{row.panelB.params.length > 0}}">
+                  <view tt:for="{{row.panelB.params}}" tt:for-item="p" tt:key="p.label" class="d-param">
+                    <text class="tiny muted">{{p.label}}</text>
+                    <text class="tiny num">{{p.value}}</text>
+                  </view>
+                </view>
+                <view tt:if="{{row.panelB.notices.length > 0}}" class="d-notices">
+                  <view tt:for="{{row.panelB.notices}}" tt:for-item="n" tt:key="*this" class="err-line warn-text">· {{n}}</view>
+                </view>
+                <view class="d-source">
+                  <text class="tiny muted">{{row.panelB.sourceLine}}</text>
+                  <view tt:if="{{row.panelB.url}}" class="link-line" bindtap="onCopyLink" data-url="{{row.panelB.url}}">复制原文链接</view>
+                </view>
+              </view>
+              <view tt:if="{{!row.panelB}}" class="d-side"><text class="tiny muted">该项不适用于 {{vm.offerNames[1]}}。</text></view>
+            </view>
+          </block>
+        </view>
+
+        <!-- 07 谈薪反推 -->
+        <view class="sec-head">
+          <text class="sec-index">07</text>
+          <text class="sec-title">谈薪反推</text>
+        </view>
+        <view class="card reverse-card">
+          <view class="strong">谈薪反推：想真正涨薪 X%，月薪该谈到多少？</view>
+          <view class="tiny muted">以「稳定年可支配现金」为目标反推，而不是只看税前数字。</view>
+
+          <block tt:if="{{!vm.reverse.enabled}}">
+            <view class="reverse-disabled">请先完善两个 Offer 的输入，再使用谈薪反推。</view>
+          </block>
+          <block tt:if="{{vm.reverse.enabled}}">
+            <view class="row-gap mt12">
+              <text class="tiny muted">目标实际涨薪</text>
+              <view class="segmented">
+                <view class="segmented-item {{reverseMode === '10' ? 'segmented-active' : ''}}" bindtap="onReverseModeTap" data-v="10">10%</view>
+                <view class="segmented-item {{reverseMode === '20' ? 'segmented-active' : ''}}" bindtap="onReverseModeTap" data-v="20">20%</view>
+                <view class="segmented-item {{reverseMode === '30' ? 'segmented-active' : ''}}" bindtap="onReverseModeTap" data-v="30">30%</view>
+                <view class="segmented-item {{reverseMode === 'custom' ? 'segmented-active' : ''}}" bindtap="onReverseModeTap" data-v="custom">自定义</view>
+              </view>
+              <view tt:if="{{reverseMode === 'custom'}}" class="input-box reverse-custom">
+                <input class="input-core num" type="digit" value="{{reverseCustom}}" placeholder="15" bindinput="onReverseCustom" />
+                <text class="input-suffix">%</text>
+              </view>
+            </view>
+
+            <view class="reverse-result">
+              <block tt:if="{{vm.reverse.state === 'ok'}}">
+                <view class="tiny muted">{{vm.reverse.line1}}</view>
+                <view class="reverse-big num">{{vm.reverse.big}}</view>
+                <view class="tiny muted">{{vm.reverse.line3}}</view>
+              </block>
+              <view tt:if="{{vm.reverse.state === 'nocash'}}" class="tiny muted">无法计算：请检查 Offer A 的可支配现金是否大于 0。</view>
+              <view tt:if="{{vm.reverse.state === 'unreachable'}}" class="tiny muted">在合理月薪范围内（≤ 50 万 / 月）无法通过涨薪达到该目标，请检查生活成本等输入。</view>
+            </view>
+
+            <view class="reverse-assumptions">
+              <view class="tiny strong muted">计算假设：</view>
+              <view class="tiny muted err-line">· 城市、奖金、补贴、生活成本与五险一金比例均保持不变；</view>
+              <view class="tiny muted err-line">· 公积金 / 社保基数随新月薪自动估算（若你手动填写了基数，则保持不变）；</view>
+              <view class="tiny muted err-line">· 试用期月数与折扣比例保持不变；</view>
+              <view class="tiny muted err-line">· 目标口径为「稳定年可支配现金」相对 Offer A 的提升幅度。</view>
+            </view>
+          </block>
+        </view>
+      </block>
+
+      <!-- 08 计算依据与口径 -->
+      <view class="sec-head">
+        <text class="sec-index">08</text>
+        <text class="sec-title">计算依据与口径</text>
+      </view>
+      <view class="card assume-card">
+        <view class="assume-item"><view class="strong">个人所得税口径</view><view class="tiny muted">采用全年综合所得「年度汇算」口径估算：应纳税所得额 = 全年税前现金收入 − 60,000 元基本减除费用 − 五险一金个人缴纳 − 专项附加扣除 × 12，按年度税率表一次性计算。未采用「累计预扣法」逐月模拟，因此月度代扣可能与公司实际发放略有差异，但全年合计更接近汇算清缴结果。年终奖按并入综合所得计税（未使用全年一次性奖金单独计税优惠）。</view></view>
+        <view class="assume-item"><view class="strong">五险一金基数</view><view class="tiny muted">默认按「当月实际税前工资」作为缴费基数，并按城市政策上下限自动调整（调整会明确提示，不静默截断）；13～16 薪的额外发薪月份不重复计入缴费基数。手动填写基数时按填写值计算，超出范围同样按上下限调整。</view></view>
+        <view class="assume-item"><view class="strong">公积金</view><view class="tiny muted">个人与单位缴存均进入个人公积金账户，属于「受限个人资产」；个人缴存会减少当期可支配现金，但会以个人 + 单位双倍金额进入你的账户，不是损失。</view></view>
+        <view class="assume-item"><view class="strong">单位社保缴费</view><view class="tiny muted">仅作为「长期社会保障投入」展示，不计入个人收入或总收入，也不折算为「保障价值」金额。</view></view>
+        <view class="assume-item"><view class="strong">试用期</view><view class="tiny muted">假设入职第一年即开始试用期，试用期折扣仅影响首年工资与首年社保公积金基数。</view></view>
+        <view class="assume-item"><view class="strong">补贴</view><view class="tiny muted">标记为「可能获得」的补贴默认不计入核心结果，必须手动勾选「我确认自己符合条件」后才计入；一次性补贴（如签字费）只计入首年，稳定年口径会将其排除。</view></view>
+        <view class="assume-item"><view class="strong">稳定年</view><view class="tiny muted">指长期稳定工作状态下的代表性年份：不含签字费、一次性补贴与仅首年补贴；「指定年数」的补贴在其持续期内视同长期发放。</view></view>
+        <view class="assume-item"><view class="strong">生活成本</view><view class="tiny muted">仅计算你填写的工作相关变化项（房租 / 通勤 / 餐饮 / 异地往返 / 其他），不包含任何完整城市生活成本数据库。</view></view>
+      </view>
+
+      <!-- 09 政策参数与数据来源 -->
+      <view class="sec-head">
+        <text class="sec-index">09</text>
+        <text class="sec-title">政策参数与数据来源</text>
+      </view>
+      <view class="card policy-cards">
+        <view tt:for="{{vm.policyCards}}" tt:for-item="pc" tt:key="*this" class="policy-card">
+          <view class="row-between">
+            <text class="strong">{{pc.cityName}}</text>
+            <text tt:if="{{pc.hasPolicy}}" class="badge {{pc.demo ? 'badge-amber' : 'badge-green'}}">{{pc.demo ? '演示数据' : '已核验'}}</text>
+          </view>
+          <block tt:if="{{pc.hasPolicy}}">
+            <view class="tiny muted mt4">政策版本：{{pc.version}}</view>
+            <view class="tiny muted num">生效日期：{{pc.effectiveDate}}</view>
+            <view class="tiny muted num">数据更新：{{pc.updatedAt}}</view>
+            <view class="link-line mt8" bindtap="onOpenPolicy" data-city="{{pc.cityCode}}">查看完整参数 ></view>
+          </block>
+          <view tt:if="{{!pc.hasPolicy}}" class="tiny muted mt4">无内置政策数据，使用手动填写参数。</view>
+        </view>
+        <view class="alert alert-warn policy-alert">{{policyNotice}}</view>
+      </view>
+    </block>
+
+    <!-- 页脚 -->
+    <view class="footer">
+      <view class="tiny muted">本工具用于帮助求职者进行 Offer 收入测算和比较，实际收入会受公司缴费方式、个人所得税申报、专项附加扣除、奖金发放方式及最新地方政策影响。结果仅供决策参考，请以公司 HR、税务及当地官方政策为准。</view>
+      <view class="tiny muted">所有计算均在本地完成，你的输入不会上传到任何服务器。</view>
+    </view>
+  </view>
+</view>

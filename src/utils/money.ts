@@ -23,7 +23,7 @@ export function fmtCNY(n: number, digits = 0): string {
 /** 124000 -> "12.4万" */
 export function fmtWan(n: number): string {
   const sign = n < 0 ? '-' : ''
-  const wan = Math.round(Math.abs(n) / 1000) / 100
+  const wan = Math.round(Math.abs(n) / 1000) / 10
   const s = Number.isInteger(wan) ? wan.toFixed(0) : wan.toFixed(1)
   return `${sign}¥${s}万`
 }
