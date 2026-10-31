@@ -372,7 +372,7 @@
             <text class="tiny muted">{{draft[i].subsidies.length}} 项</text>
           </view>
 
-          <view tt:for="{{draft[i].subsidies}}" tt:for-item="s" tt:for-index="si" tt:key="s.id" class="subsidy-row">
+          <view tt:for="{{draft[i].subsidies}}" tt:for-item="s" tt:for-index="si" tt:key="id" class="subsidy-row">
             <view class="row-gap">
               <view class="input-box subsidy-name">
                 <input class="input-core" value="{{s.name}}" placeholder="名称" bindinput="onSubsidyName" data-i="{{i}}" data-si="{{si}}" />
@@ -481,7 +481,7 @@
             <view class="summary-sub">{{vm.headline.explanation}}</view>
           </view>
           <view class="metric-grid">
-            <view tt:for="{{vm.headline.metrics}}" tt:for-item="m" tt:for-index="mi" tt:key="*this" class="metric-cell {{m.hl ? 'metric-hl' : ''}}">
+            <view tt:for="{{vm.headline.metrics}}" tt:for-item="m" tt:for-index="mi" tt:key="label" class="metric-cell {{m.hl ? 'metric-hl' : ''}}">
               <view class="tiny muted">{{m.label}}</view>
               <view class="metric-value num {{m.cls}}">{{m.value}}</view>
               <view class="tiny muted">{{m.sub}}</view>
@@ -506,7 +506,7 @@
             <text class="sc-cell sc-right">{{vm.colA}}</text>
             <text class="sc-cell sc-right">{{vm.colB}}</text>
           </view>
-          <view tt:for="{{vm.scenarioRows}}" tt:for-item="row" tt:key="row.key" class="sc-row {{row.active ? 'sc-active' : ''}}" bindtap="onScenarioTap" data-s="{{row.key}}">
+          <view tt:for="{{vm.scenarioRows}}" tt:for-item="row" tt:key="key" class="sc-row {{row.active ? 'sc-active' : ''}}" bindtap="onScenarioTap" data-s="{{row.key}}">
             <text class="sc-cell sc-label">{{row.label}}<text tt:if="{{row.active}}" class="sc-cur"> 当前</text></text>
             <text class="sc-cell sc-right num">{{row.aText}}</text>
             <text class="sc-cell sc-right num sc-strong">{{row.bText}}</text>
@@ -527,7 +527,7 @@
             <text class="tiny muted">{{yearView === 'first' ? '首年' : '稳定年'}}口径</text>
           </view>
           <view class="tiny muted">属于你、现在就能自由花的钱</view>
-          <view tt:for="{{vm.wallets.cash.rows}}" tt:for-item="r" tt:key="r.name" class="wallet-row">
+          <view tt:for="{{vm.wallets.cash.rows}}" tt:for-item="r" tt:key="name" class="wallet-row">
             <view class="row-between">
               <text class="{{r.emphasize ? 'strong' : 'muted'}}">{{r.name}}</text>
               <text class="num wallet-amt {{r.emphasize ? 'strong' : ''}}">{{r.amountText}}<text class="tiny muted"> / 年</text></text>
@@ -546,7 +546,7 @@
             <text class="tiny muted">{{yearView === 'first' ? '首年' : '稳定年'}}口径</text>
           </view>
           <view class="tiny muted">属于你，但不能随时花的钱（个人 + 单位）</view>
-          <view tt:for="{{vm.wallets.fund.rows}}" tt:for-item="r" tt:key="r.name" class="wallet-row">
+          <view tt:for="{{vm.wallets.fund.rows}}" tt:for-item="r" tt:key="name" class="wallet-row">
             <view class="row-between">
               <text class="{{index === 1 ? 'strong' : 'muted'}}">{{r.name}}</text>
               <text class="num strong">{{r.totalText}}</text>
@@ -566,7 +566,7 @@
             <text class="tiny muted">稳定年口径</text>
           </view>
           <view class="tiny muted">社保缴费基础决定未来的保障水平</view>
-          <view tt:for="{{vm.wallets.security.rows}}" tt:for-item="r" tt:key="r.label" class="sec-row">
+          <view tt:for="{{vm.wallets.security.rows}}" tt:for-item="r" tt:key="label" class="sec-row">
             <text class="sec-label">{{r.label}}</text>
             <text class="sec-values num"><text class="muted tiny">A </text>{{r.aText}}<text class="muted tiny"> · B </text>{{r.bText}}</text>
           </view>
@@ -591,7 +591,7 @@
             <view class="diff-empty">两个 Offer 的收入与成本结构基本一致，没有明显差异项。</view>
           </block>
           <block tt:if="{{!vm.diff.empty}}">
-            <view tt:for="{{vm.diff.rows}}" tt:for-item="row" tt:key="row.key" class="diff-row">
+            <view tt:for="{{vm.diff.rows}}" tt:for-item="row" tt:key="key" class="diff-row">
               <text class="diff-label">{{row.label}}</text>
               <view class="diff-bar-track">
                 <view class="diff-bar {{row.cls === 'pos' ? 'bar-pos' : 'bar-neg'}}" style="width: {{row.widthPct}}%; margin-left: {{row.mlPct}}%;"></view>
@@ -629,7 +629,7 @@
             <text class="d-cell d-chev-cell"></text>
           </view>
 
-          <block tt:for="{{vm.details.rows}}" tt:for-item="row" tt:key="row.key">
+          <block tt:for="{{vm.details.rows}}" tt:for-item="row" tt:key="key">
             <view tt:if="{{row.groupTitle}}" class="d-group">{{row.groupTitle}}</view>
             <view class="d-row {{row.emphasisCls}}" bindtap="onDetailToggle" data-key="{{row.key}}">
               <view class="d-cell d-name">
@@ -650,7 +650,7 @@
                 </view>
                 <view class="d-formula">{{row.panelA.formula}}</view>
                 <view tt:if="{{row.panelA.params.length > 0}}">
-                  <view tt:for="{{row.panelA.params}}" tt:for-item="p" tt:key="p.label" class="d-param">
+                  <view tt:for="{{row.panelA.params}}" tt:for-item="p" tt:key="label" class="d-param">
                     <text class="tiny muted">{{p.label}}</text>
                     <text class="tiny num">{{p.value}}</text>
                   </view>
@@ -671,7 +671,7 @@
                 </view>
                 <view class="d-formula">{{row.panelB.formula}}</view>
                 <view tt:if="{{row.panelB.params.length > 0}}">
-                  <view tt:for="{{row.panelB.params}}" tt:for-item="p" tt:key="p.label" class="d-param">
+                  <view tt:for="{{row.panelB.params}}" tt:for-item="p" tt:key="label" class="d-param">
                     <text class="tiny muted">{{p.label}}</text>
                     <text class="tiny num">{{p.value}}</text>
                   </view>
@@ -759,7 +759,7 @@
         <text class="sec-title">政策参数与数据来源</text>
       </view>
       <view class="card policy-cards">
-        <view tt:for="{{vm.policyCards}}" tt:for-item="pc" tt:key="*this" class="policy-card">
+        <view tt:for="{{vm.policyCards}}" tt:for-item="pc" tt:key="i" class="policy-card">
           <view class="row-between">
             <text class="strong">{{pc.cityName}}</text>
             <text tt:if="{{pc.hasPolicy}}" class="badge {{pc.demo ? 'badge-amber' : 'badge-green'}}">{{pc.demo ? '演示数据' : '已核验'}}</text>

@@ -7,6 +7,13 @@ page {
   line-height: 1.6;
 }
 
+view,
+text,
+picker,
+input {
+  box-sizing: border-box;
+}
+
 .num {
   font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', 'PingFang SC', sans-serif;
   font-variant-numeric: tabular-nums;

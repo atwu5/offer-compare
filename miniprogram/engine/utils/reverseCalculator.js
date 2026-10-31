@@ -17,7 +17,7 @@ function computeMinSalaryForTarget(offerA, policyA, offerB, policyB, targetPct) 
         return { reachable: false, currentReal, target: targetPct, baseDisposable };
     }
     const targetCash = baseDisposable * (1 + targetPct);
-    const f = (salary) => (0, offerCalculator_1.computeOfferResult)({ ...offerB, monthlySalary: salary }, policyB, 'expected').steadyYear
+    const f = (salary) => (0, offerCalculator_1.computeOfferResult)(Object.assign(Object.assign({}, offerB), { monthlySalary: salary }), policyB, 'expected').steadyYear
         .disposableCash;
     // 可支配现金关于月薪单调递增（社保公积金有上限封顶，个税边际税率 < 100%），可用二分法
     let lo = 0;

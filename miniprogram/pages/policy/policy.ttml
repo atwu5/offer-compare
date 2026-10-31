@@ -19,10 +19,10 @@
 
     <view tt:if="{{demo}}" class="alert alert-warn">⚠️ 以下为演示数据，仅用于功能测试，请勿作为真实缴费依据。</view>
 
-    <view tt:for="{{blocks}}" tt:for-item="b" tt:key="b.title" class="card block-card">
+    <view tt:for="{{blocks}}" tt:for-item="b" tt:key="title" class="card block-card">
       <view class="block-title">{{b.title}}</view>
       <view class="row-list">
-        <view tt:for="{{b.rows}}" tt:for-item="r" tt:key="r.label" class="row-line">
+        <view tt:for="{{b.rows}}" tt:for-item="r" tt:key="label" class="row-line">
           <text class="row-label">{{r.label}}</text>
           <text class="row-value num">{{r.value}}</text>
         </view>
@@ -32,7 +32,7 @@
     <view class="card block-card">
       <view class="block-title">住房公积金</view>
       <view class="row-list">
-        <view tt:for="{{fundRows}}" tt:for-item="r" tt:key="r.label" class="row-line">
+        <view tt:for="{{fundRows}}" tt:for-item="r" tt:key="label" class="row-line">
           <text class="row-label">{{r.label}}</text>
           <text class="row-value num">{{r.value}}</text>
         </view>
@@ -54,7 +54,7 @@
       <view class="mt12">
         <view class="tiny muted">政策来源</view>
         <block tt:if="{{sources.length > 0}}">
-          <view tt:for="{{sources}}" tt:for-item="src" tt:key="src.name" class="mt4">
+          <view tt:for="{{sources}}" tt:for-item="src" tt:key="name" class="mt4">
             <text tt:if="{{src.url}}" class="link-line" bindtap="onCopyLink" data-url="{{src.url}}">{{src.name}}（复制原文链接）></text>
             <text tt:if="{{!src.url}}" class="tiny warn-text">{{src.name}}</text>
           </view>

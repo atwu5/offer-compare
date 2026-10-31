@@ -573,32 +573,8 @@ function computeOfferResult(offer, policy, scenario) {
         livingItems,
         livingAnnual,
     };
-    const breakdown = buildBreakdown({
-        ...baseCtx,
-        year: 2,
-        fixedSalary: steadyFixedSalary,
-        subsidiesTotal: subsidiesSteady,
-        gross: grossSteady,
-        si: siS,
-        hf: hfS,
-        tax: taxSteady,
-        siEmployeeTotal: siEmpS,
-        hfEmployee: hfEmpS,
-        disposable: steadyYear.disposableCash,
-    });
-    const firstBreakdown = buildBreakdown({
-        ...baseCtx,
-        year: 1,
-        fixedSalary: year1FixedSalary,
-        subsidiesTotal: subsidiesYear1,
-        gross: grossYear1,
-        si: siY1,
-        hf: hfY1,
-        tax: taxYear1,
-        siEmployeeTotal: siEmp1,
-        hfEmployee: hfEmp1,
-        disposable: year1.disposableCash,
-    });
+    const breakdown = buildBreakdown(Object.assign(Object.assign({}, baseCtx), { year: 2, fixedSalary: steadyFixedSalary, subsidiesTotal: subsidiesSteady, gross: grossSteady, si: siS, hf: hfS, tax: taxSteady, siEmployeeTotal: siEmpS, hfEmployee: hfEmpS, disposable: steadyYear.disposableCash }));
+    const firstBreakdown = buildBreakdown(Object.assign(Object.assign({}, baseCtx), { year: 1, fixedSalary: year1FixedSalary, subsidiesTotal: subsidiesYear1, gross: grossYear1, si: siY1, hf: hfY1, tax: taxYear1, siEmployeeTotal: siEmp1, hfEmployee: hfEmp1, disposable: year1.disposableCash }));
     return {
         offerId: offer.id,
         offerName: offer.name,

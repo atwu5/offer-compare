@@ -55,12 +55,12 @@ function parseIntOrNull(raw) {
 /** 不可变深设置：返回带新路径值的克隆对象（不修改原对象） */
 function setPath(obj, path, value) {
     const segs = path.split('.');
-    const clone = Array.isArray(obj) ? obj.slice() : { ...obj };
+    const clone = Array.isArray(obj) ? obj.slice() : Object.assign({}, obj);
     let cur = clone;
     for (let k = 0; k < segs.length - 1; k++) {
         const key = segs[k];
         const nxt = cur[key];
-        cur[key] = Array.isArray(nxt) ? nxt.slice() : { ...(nxt !== null && nxt !== void 0 ? nxt : {}) };
+        cur[key] = Array.isArray(nxt) ? nxt.slice() : Object.assign({}, (nxt !== null && nxt !== void 0 ? nxt : {}));
         cur = cur[key];
     }
     cur[segs[segs.length - 1]] = value;
@@ -584,25 +584,13 @@ Page({
         const code = (_a = CITY_VALUES[idx]) !== null && _a !== void 0 ? _a : 'custom';
         const offers = this.data.offers.slice();
         const prev = offers[i];
-        const next = {
-            ...prev,
-            cityCode: code,
-            cityCustomName: code === 'custom' ? prev.cityCustomName || '' : '',
-            socialInsurance: {
-                useCityDefault: code !== 'custom',
-                pensionBase: null,
-                medicalBase: null,
-                unemploymentBase: null,
-                ...(code === 'custom'
-                    ? {
-                        pensionRates: { employee: null, employer: null },
-                        medicalRates: { employee: null, employer: null },
-                        unemploymentRates: { employee: null, employer: null },
-                    }
-                    : {}),
-            },
-            housingFund: { base: null, employeeRate: null, employerRate: null },
-        };
+        const next = Object.assign(Object.assign({}, prev), { cityCode: code, cityCustomName: code === 'custom' ? prev.cityCustomName || '' : '', socialInsurance: Object.assign({ useCityDefault: code !== 'custom', pensionBase: null, medicalBase: null, unemploymentBase: null }, (code === 'custom'
+                ? {
+                    pensionRates: { employee: null, employer: null },
+                    medicalRates: { employee: null, employer: null },
+                    unemploymentRates: { employee: null, employer: null },
+                }
+                : {})), housingFund: { base: null, employeeRate: null, employerRate: null } });
         offers[i] = next;
         const draft = this.data.draft.slice();
         draft[i] = buildDraft(next);
@@ -661,19 +649,11 @@ Page({
         const value = (_a = draft.hfRateValues[idx]) !== null && _a !== void 0 ? _a : 'default';
         const offers = this.data.offers.slice();
         if (value === 'default') {
-            offers[i] = setPath(offers[i], 'housingFund', {
-                ...offers[i].housingFund,
-                employeeRate: null,
-                employerRate: null,
-            });
+            offers[i] = setPath(offers[i], 'housingFund', Object.assign(Object.assign({}, offers[i].housingFund), { employeeRate: null, employerRate: null }));
         }
         else {
             const rate = Number(value) / 100;
-            offers[i] = setPath(offers[i], 'housingFund', {
-                ...offers[i].housingFund,
-                employeeRate: rate,
-                employerRate: rate,
-            });
+            offers[i] = setPath(offers[i], 'housingFund', Object.assign(Object.assign({}, offers[i].housingFund), { employeeRate: rate, employerRate: rate }));
         }
         this.setData({
             [`offers.${i}`]: offers[i],
@@ -686,7 +666,7 @@ Page({
     onBonusModeTap(e) {
         const i = Number(e.currentTarget.dataset.i);
         const mode = String(e.currentTarget.dataset.mode);
-        this.commitEdit(i, 'fixedBonus', { ...this.data.offers[i].fixedBonus, mode }, 'bonusMode', mode);
+        this.commitEdit(i, 'fixedBonus', Object.assign(Object.assign({}, this.data.offers[i].fixedBonus), { mode }), 'bonusMode', mode);
     },
     onVbToggleTap(e) {
         const i = Number(e.currentTarget.dataset.i);
@@ -698,15 +678,15 @@ Page({
         const mode = String(e.currentTarget.dataset.mode);
         const vb = this.data.offers[i].variableBonus;
         this.commitEdit(i, 'variableBonus', {
-            conservative: { ...vb.conservative, mode },
-            expected: { ...vb.expected, mode },
-            optimistic: { ...vb.optimistic, mode },
+            conservative: Object.assign(Object.assign({}, vb.conservative), { mode }),
+            expected: Object.assign(Object.assign({}, vb.expected), { mode }),
+            optimistic: Object.assign(Object.assign({}, vb.optimistic), { mode }),
         }, 'vbMode', mode);
     },
     onSiModeTap(e) {
         const i = Number(e.currentTarget.dataset.i);
         const useCityDefault = String(e.currentTarget.dataset.v) === '1';
-        this.commitEdit(i, 'socialInsurance', { ...this.data.offers[i].socialInsurance, useCityDefault }, 'useCityDefault', useCityDefault);
+        this.commitEdit(i, 'socialInsurance', Object.assign(Object.assign({}, this.data.offers[i].socialInsurance), { useCityDefault }), 'useCityDefault', useCityDefault);
     },
     /* -------- 补贴 -------- */
     onSubsidyAdd(e) {
@@ -714,7 +694,7 @@ Page({
         const preset = SUBSIDY_PRESETS[Number(e.currentTarget.dataset.p)];
         if (!preset)
             return;
-        const subsidy = { ...preset, id: (0, defaults_1.newSubsidyId)(), amount: null };
+        const subsidy = Object.assign(Object.assign({}, preset), { id: (0, defaults_1.newSubsidyId)(), amount: null });
         const offers = this.data.offers.slice();
         offers[i] = setPath(offers[i], 'subsidies', [...offers[i].subsidies, subsidy]);
         const draft = this.data.draft.slice();
