@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "sanity": "tsx scripts/sanity.ts",
     "mini:build": "tsc -p miniprogram-src/tsconfig.json",
-    "mini:sanity": "tsx scripts/sanity.mini.ts"
+    "mini:sanity": "tsx scripts/sanity.mini.ts",
+    "mini:sanity:toolbox": "tsx scripts/sanity.toolbox.mini.ts"
   },
   "dependencies": {
     "react": "^18.3.1",

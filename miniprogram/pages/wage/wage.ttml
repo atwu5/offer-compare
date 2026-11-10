@@ -1,0 +1,110 @@
+<view class="tb-page">
+  <view class="tb-card tb-card-pad">
+    <view class="tb-label">月收入（元）</view>
+    <input class="tb-input num" type="digit" value="{{draft.monthly}}" placeholder="10000" bindinput="onFieldInput" data-f="monthly" />
+    <view class="tb-grid2">
+      <view>
+        <view class="tb-hint">每周工作天数</view>
+        <input class="tb-input num" type="number" value="{{draft.days}}" placeholder="5" bindinput="onFieldInput" data-f="days" />
+      </view>
+      <view>
+        <view class="tb-hint">每天工作小时</view>
+        <input class="tb-input num" type="digit" value="{{draft.hours}}" placeholder="8" bindinput="onFieldInput" data-f="hours" />
+      </view>
+    </view>
+    <view tt:if="{{!useAnnualDays}}" style="margin-top: 20rpx;">
+      <view class="tb-hint">每年带薪工作周数 · 默认 52 周（休假默认视为带薪）；扣除假期请改用「全年工作天数」</view>
+      <input class="tb-input num" type="number" value="{{draft.weeks}}" placeholder="52" bindinput="onFieldInput" data-f="weeks" />
+    </view>
+    <view class="tb-row" style="margin-top: 20rpx;" bindtap="onUseAnnualDaysTap">
+      <view class="tb-check {{useAnnualDays ? 'tb-check-on' : ''}}">{{useAnnualDays ? '✓' : ''}}</view>
+      <view style="font-size: 24rpx; color: #211e2e;">直接按「全年工作天数」计算（扣除假期更准确）</view>
+    </view>
+    <view tt:if="{{useAnnualDays}}" style="margin-top: 20rpx;">
+      <view class="tb-hint">全年工作天数</view>
+      <input class="tb-input num" type="number" value="{{draft.annualDays}}" placeholder="250" bindinput="onFieldInput" data-f="annualDays" />
+    </view>
+    <view style="margin-top: 20rpx;">
+      <view class="tb-hint">年度奖金（选填）· 计入年收入一起折算</view>
+      <input class="tb-input num" type="digit" value="{{draft.bonus}}" placeholder="0" bindinput="onFieldInput" data-f="bonus" />
+    </view>
+    <view class="tb-row" style="margin-top: 20rpx;">
+      <view class="tb-hint" style="margin-bottom: 0;">收入口径</view>
+      <view class="tb-seg">
+        <view class="tb-seg-item {{basis === 'gross' ? 'tb-seg-active' : ''}}" bindtap="onBasisTap" data-v="gross">税前</view>
+        <view class="tb-seg-item {{basis === 'net' ? 'tb-seg-active' : ''}}" bindtap="onBasisTap" data-v="net">税后</view>
+      </view>
+    </view>
+    <view class="tb-hint" style="margin-top: 12rpx; margin-bottom: 0;">口径标签仅表示你填写的月收入是税前还是税后；工具不会自动换算（税前 → 税后请先用「个税计算器」）。</view>
+  </view>
+
+  <view tt:if="{{error}}" class="tb-note tb-note-warn" style="margin-top: 24rpx;">{{error}}</view>
+
+  <view tt:if="{{vm}}" class="tb-card tb-result" style="margin-top: 24rpx; padding: 28rpx 24rpx;">
+    <view class="tb-result-label">每小时赚</view>
+    <view class="tb-result-value num">{{vm.hourlyText}}</view>
+    <view class="tb-result-sub">{{vm.hourlySub}}</view>
+  </view>
+
+  <view tt:if="{{vm}}" class="tb-grid2">
+    <view class="tb-mini">
+      <view class="tb-mini-label">每分钟赚</view>
+      <view class="tb-mini-value num">{{vm.perMinuteText}}</view>
+    </view>
+    <view class="tb-mini">
+      <view class="tb-mini-label">每秒钟赚</view>
+      <view class="tb-mini-value num">{{vm.perSecondText}}</view>
+    </view>
+    <view class="tb-mini">
+      <view class="tb-mini-label">每个工作日赚</view>
+      <view class="tb-mini-value num">{{vm.perDayText}}</view>
+    </view>
+    <view class="tb-mini">
+      <view class="tb-mini-label">全年收入</view>
+      <view class="tb-mini-value num">{{vm.annualIncomeText}}</view>
+    </view>
+    <view class="tb-mini">
+      <view class="tb-mini-label">全年工作小时</view>
+      <view class="tb-mini-value num">{{vm.annualHoursText}}</view>
+    </view>
+    <view class="tb-mini">
+      <view class="tb-mini-label">全年工作天数</view>
+      <view class="tb-mini-value num">{{vm.annualDaysText}}</view>
+    </view>
+  </view>
+
+  <view tt:if="{{vm}}" class="tb-card" style="margin-top: 24rpx; padding: 28rpx 24rpx; text-align: center;" bindtap="onCounterToggle">
+    <view tt:if="{{!counterOn}}" class="tb-btn-ghost" style="display: inline-block;">▶ 开启按秒收入计数器</view>
+    <view tt:if="{{counterOn}}">
+      <view class="tb-mini-label">开启以来已经赚了</view>
+      <view class="num" style="margin-top: 8rpx; font-size: 52rpx; font-weight: 700; color: #6d5bf6;">{{counterEarnedText}}</view>
+      <view class="tb-btn-ghost" style="display: inline-block; margin-top: 16rpx;">■ 停止</view>
+    </view>
+  </view>
+
+  <view class="tb-card tb-card-pad" style="margin-top: 24rpx;">
+    <view class="tb-row-between" bindtap="onReverseToggle">
+      <view class="tb-strong" style="font-size: 26rpx;">反向计算：想每小时赚 X 元，月薪该多少？</view>
+      <view class="tb-muted">{{reverseOn ? '▴' : '▾'}}</view>
+    </view>
+    <view tt:if="{{reverseOn}}" style="margin-top: 18rpx;">
+      <view class="tb-hint">期望时薪（元 / 小时）· 沿用上方的工作制度</view>
+      <input class="tb-input num" type="digit" value="{{reverseTarget}}" placeholder="200" bindinput="onReverseTargetInput" />
+      <view tt:if="{{reverseVm}}" class="tb-grid2">
+        <view class="tb-mini">
+          <view class="tb-mini-label">对应年收入</view>
+          <view class="tb-mini-value num">{{reverseVm.annualText}}</view>
+        </view>
+        <view class="tb-mini">
+          <view class="tb-mini-label">对应月收入</view>
+          <view class="tb-mini-value num">{{reverseVm.monthlyText}}</view>
+        </view>
+      </view>
+      <view tt:if="{{reverseError}}" class="tb-note tb-note-warn" style="margin-top: 16rpx;">{{reverseError}}</view>
+    </view>
+  </view>
+
+  <view class="tb-note" style="margin-top: 24rpx;">
+    计算口径：年收入 = 月收入 × 12 + 年度奖金；年工作小时 = 全年工作天数 × 每天小时。默认按「每周天数 × 52 周」估算（休假视为带薪），需要精确扣除假期时勾选「全年工作天数」直接填写。
+  </view>
+</view>

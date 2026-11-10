@@ -1,5 +1,14 @@
 {
-  "pages": ["pages/index/index", "pages/policy/policy"],
+  "pages": [
+    "pages/home/home",
+    "pages/index/index",
+    "pages/tax/tax",
+    "pages/retire/retire",
+    "pages/days/days",
+    "pages/anniversary/anniversary",
+    "pages/wage/wage",
+    "pages/policy/policy"
+  ],
   "window": {
     "navigationBarTitleText": "Offer到手对比",
     "navigationBarBackgroundColor": "#ffffff",

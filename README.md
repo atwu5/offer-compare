@@ -147,3 +147,14 @@ npm run mini:sanity    # 计算引擎自测（与 Web 版 sanity 同一套断言
 `miniprogram-src/engine/` 是 `src/` 计算引擎的逐字拷贝。修改 Web 版引擎逻辑后，需要把改动同步到该副本并
 重新 `npm run mini:build`。本分支同时修复了 `fmtWan` 的万元换算错误（此前 21 万会被显示为「¥2.1万」），
 该修复对 Web 版与小程序版同时生效。
+
+---
+
+## 生活计算工具箱小程序版（2026-11-10 更新）
+
+抖音小程序已与网页版工具箱对齐：`pages/home` 为工具箱首页，新增个税 / 退休倒计时 / 出生天数 / 纪念日 / 时薪
+五个工具页，计算层与 Web 版逐字同源（`miniprogram-src/engine/{utils,config}`）。
+
+- 本地缓存：`toolbox.*` 命名空间（tt.setStorageSync 封装），输入自动恢复、可一键清除
+- 自测：`npm run mini:sanity:toolbox`（16 项断言）+ 无头冒烟 25 项
+- 引擎同步：修改 Web 版计算模块后，同步拷贝到 `miniprogram-src/engine/` 并重新 `npm run mini:build`

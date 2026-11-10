@@ -49,7 +49,15 @@ declare namespace tt {
   function setClipboardData(options: { data: string; success?: () => void; fail?: () => void }): void
   function showToast(options: { title: string; icon?: 'success' | 'fail' | 'loading' | 'none'; duration?: number }): void
   function navigateTo(options: { url: string }): void
+  function setStorageSync(key: string, data: unknown): void
+  function getStorageSync(key: string): string
+  function removeStorageSync(key: string): void
 }
+
+declare function setTimeout(cb: (...args: any[]) => void, delay?: number, ...args: any[]): number
+declare function clearTimeout(id: number): void
+declare function setInterval(cb: (...args: any[]) => void, delay?: number, ...args: any[]): number
+declare function clearInterval(id: number): void
 
 /** 页面事件（仅声明本项目用到的字段） */
 declare namespace MiniEvent {
