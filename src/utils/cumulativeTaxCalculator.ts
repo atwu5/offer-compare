@@ -45,7 +45,7 @@ export interface CumulativeTaxResult {
   /** 已输入月份的累计 */
   totals: { income: number; tax: number; net: number }
   /** 全年 12 个月推算：未填月份按最近一个已填月份的月度数据外推 */
-  annual: { income: number; tax: number; net: number }
+  annual: { income: number; tax: number; net: number; taxable: number }
 }
 
 const toFen = (yuan: number): number => Math.round(yuan * 100)
@@ -134,6 +134,7 @@ export function simulateWithholding(months: MonthTaxInput[]): CumulativeTaxResul
   let annualPaidFen = 0
   let annualIncomeFen = 0
   let annualNetFen = 0
+  let annualTaxableFen = 0
   for (const m of projected) {
     const taxableFen =
       toFen(m.salary) -
@@ -143,6 +144,7 @@ export function simulateWithholding(months: MonthTaxInput[]): CumulativeTaxResul
       toFen(m.specialDeduction) -
       toFen(m.otherDeduction)
     annualCumFen += taxableFen
+    annualTaxableFen += taxableFen
     annualIncomeFen += toFen(m.salary)
     const { taxFen, row } = rowOf(m, annualCumFen, annualPaidFen)
     annualPaidFen += taxFen
@@ -152,6 +154,7 @@ export function simulateWithholding(months: MonthTaxInput[]): CumulativeTaxResul
     income: toYuan(annualIncomeFen),
     tax: toYuan(annualPaidFen),
     net: toYuan(annualNetFen),
+    taxable: toYuan(annualTaxableFen),
   }
 
   return { rows, totals, annual }

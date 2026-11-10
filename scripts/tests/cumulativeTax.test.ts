@@ -42,6 +42,7 @@ test('累计预扣：月薪 1 万无扣除的经典曲线', () => {
   assert.equal(res.totals.tax, 3480)
   assert.equal(res.annual.tax, 3480)
   assert.equal(res.annual.net, 120000 - 3480)
+  assert.equal(res.annual.taxable, 60000)
 })
 
 test('累计预扣：年初低收入为负、后续补回，当月税不为负', () => {

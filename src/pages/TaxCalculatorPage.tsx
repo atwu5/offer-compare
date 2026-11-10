@@ -86,7 +86,7 @@ export default function TaxCalculatorPage() {
 
   const bonusCmp = useMemo(() => {
     if (bonus <= 0) return null
-    return compareBonusMethods(result.annual.tax, annualTaxableOf(result), bonus)
+    return compareBonusMethods(result.annual.tax, result.annual.taxable, bonus)
   }, [bonus, result])
 
   const updateMonthly = (index: number, p: Partial<{ salary: number | null; deduction: number | null }>) => {
@@ -236,13 +236,3 @@ export default function TaxCalculatorPage() {
   )
 }
 
-/** 全年工资部分应纳税所得额合计（把累计值差分为逐月增量后求和） */
-function annualTaxableOf(res: ReturnType<typeof simulateWithholding>): number {
-  let monthlySum = 0
-  let prev = 0
-  for (const r of res.rows) {
-    monthlySum += r.cumulativeTaxable - prev
-    prev = r.cumulativeTaxable
-  }
-  return monthlySum
-}
