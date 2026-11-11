@@ -8,13 +8,10 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "sanity": "tsx scripts/sanity.ts",
-<<<<<<< HEAD
-    "test:toolbox": "node --import tsx --test scripts/tests/*.test.ts"
-=======
+    "test:toolbox": "node --import tsx --test scripts/tests/*.test.ts",
     "mini:build": "tsc -p miniprogram-src/tsconfig.json",
     "mini:sanity": "tsx scripts/sanity.mini.ts",
     "mini:sanity:toolbox": "tsx scripts/sanity.toolbox.mini.ts"
->>>>>>> douyin-miniprogram
   },
   "dependencies": {
     "react": "^18.3.1",
