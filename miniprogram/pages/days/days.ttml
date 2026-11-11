@@ -1,0 +1,70 @@
+<view class="tb-page">
+  <view class="tb-card tb-card-pad">
+    <view class="tb-label">出生日期</view>
+    <picker mode="date" value="{{birth}}" start="1900-01-01" end="{{todayStr}}" bindchange="onDatePick">
+      <view class="tb-input" style="color: {{birth ? '#211e2e' : '#b3afc2'}};">{{birth || '请选择出生日期'}}</view>
+    </picker>
+    <view class="tb-hint" style="margin-top: 16rpx;">出生时间（选填）· 填写后展示真实经过的小时与分钟</view>
+    <picker mode="time" value="{{time}}" bindchange="onTimePick">
+      <view class="tb-input" style="color: {{time ? '#211e2e' : '#b3afc2'}};">{{time || '选择出生时间'}}</view>
+    </picker>
+    <view tt:if="{{isFeb29}}" style="margin-top: 20rpx;">
+      <view class="tb-label">非闰年的生日按哪天过？</view>
+      <view class="tb-seg">
+        <view class="tb-seg-item {{leapPref === 'day28' ? 'tb-seg-active' : ''}}" bindtap="onLeapPrefTap" data-v="day28">2 月 28 日</view>
+        <view class="tb-seg-item {{leapPref === 'mar1' ? 'tb-seg-active' : ''}}" bindtap="onLeapPrefTap" data-v="mar1">3 月 1 日</view>
+      </view>
+    </view>
+  </view>
+
+  <view tt:if="{{error}}" class="tb-note tb-note-warn" style="margin-top: 24rpx;">{{error}}</view>
+
+  <view tt:if="{{vm}}" class="tb-card tb-result" style="margin-top: 24rpx; padding: 28rpx 24rpx;">
+    <view class="tb-result-label">已经出生</view>
+    <view class="tb-result-value num">{{vm.daysText}} 天</view>
+    <view class="tb-result-sub">{{vm.ordinalText}}</view>
+  </view>
+
+  <view tt:if="{{vm}}" class="tb-grid2">
+    <view class="tb-mini">
+      <view class="tb-mini-label">当前周岁</view>
+      <view class="tb-mini-value num">{{vm.ageText}}</view>
+    </view>
+    <view class="tb-mini">
+      <view class="tb-mini-label">已经度过</view>
+      <view class="tb-mini-value num">{{vm.weeksText}}</view>
+    </view>
+    <view class="tb-mini">
+      <view class="tb-mini-label">出生至今</view>
+      <view class="tb-mini-value num" style="font-size: 26rpx;">{{vm.ymdText}}</view>
+    </view>
+    <view class="tb-mini">
+      <view class="tb-mini-label">{{vm.birthdayMain === '今天生日 🎉' ? '生日快乐' : '距离下一次生日'}}</view>
+      <view class="tb-mini-value num" style="font-size: 26rpx;">{{vm.birthdayMain}}</view>
+      <view class="tb-mini-sub">{{vm.birthdaySub}}</view>
+    </view>
+  </view>
+
+  <view tt:if="{{vm && vm.hasTime}}" class="tb-grid2">
+    <view class="tb-mini">
+      <view class="tb-mini-label">已经出生（小时）</view>
+      <view class="tb-mini-value num">{{vm.hoursText}}</view>
+    </view>
+    <view class="tb-mini">
+      <view class="tb-mini-label">已经出生（分钟）</view>
+      <view class="tb-mini-value num">{{vm.minutesText}}</view>
+    </view>
+  </view>
+
+  <view tt:if="{{vm && vm.milestones.length > 0}}" class="tb-card tb-card-pad" style="margin-top: 24rpx;">
+    <view class="tb-strong" style="font-size: 26rpx;">接下来的人生节点</view>
+    <view tt:for="{{vm.milestones}}" tt:for-item="m" tt:key="nText" class="tb-row-between" style="margin-top: 16rpx;">
+      <view style="font-size: 24rpx; color: #6f6b80;">{{m.nText}}</view>
+      <view style="font-size: 21rpx; color: #a5a1b3;">{{m.whenText}}</view>
+    </view>
+  </view>
+
+  <view class="tb-note" style="margin-top: 24rpx;">
+    口径说明：「已经出生 N 天」按自然日差计算（出生当天为 0 天）；「第 N 天」= 来到世界的第 N 个自然日；小时/分钟按真实时间差计算。日期使用设备本地时区。
+  </view>
+</view>

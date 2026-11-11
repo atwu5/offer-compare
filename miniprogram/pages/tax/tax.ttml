@@ -1,0 +1,125 @@
+<view class="tb-page">
+  <!-- 模式与月份 -->
+  <view class="tb-card tb-card-pad">
+    <view class="tb-row" style="flex-wrap: wrap; gap: 16rpx;">
+      <view class="tb-seg">
+        <view class="tb-seg-item {{mode === 'simple' ? 'tb-seg-active' : ''}}" bindtap="onModeTap" data-mode="simple">每月收入固定</view>
+        <view class="tb-seg-item {{mode === 'monthly' ? 'tb-seg-active' : ''}}" bindtap="onModeTap" data-mode="monthly">逐月输入</view>
+      </view>
+      <view class="tb-seg">
+        <view tt:for="{{[1,2,3,4,5,6,7,8,9,10,11,12]}}" tt:for-item="mm" tt:key="*this" class="tb-seg-item {{uptoMonth === mm ? 'tb-seg-active' : ''}}" bindtap="onMonthTap" data-m="{{mm}}">{{mm}}</view>
+      </view>
+    </view>
+
+    <!-- 简易模式 -->
+    <view tt:if="{{mode === 'simple'}}" style="margin-top: 24rpx;">
+      <view class="tb-label">税前月薪（元）</view>
+      <input class="tb-input num {{draft.salary === '' ? 'tb-input-invalid' : ''}}" type="digit" value="{{draft.salary}}" placeholder="20000" bindinput="onFieldInput" data-f="salary" />
+      <view class="tb-grid2">
+        <view>
+          <view class="tb-hint">社保个人缴纳（元/月）· 不同城市不同，请按实际填写</view>
+          <input class="tb-input num" type="digit" value="{{draft.si}}" placeholder="0" bindinput="onFieldInput" data-f="si" />
+        </view>
+        <view>
+          <view class="tb-hint">公积金个人缴纳（元/月）</view>
+          <input class="tb-input num" type="digit" value="{{draft.hf}}" placeholder="0" bindinput="onFieldInput" data-f="hf" />
+        </view>
+        <view>
+          <view class="tb-hint">专项附加扣除（元/月）</view>
+          <input class="tb-input num" type="digit" value="{{draft.special}}" placeholder="0" bindinput="onFieldInput" data-f="special" />
+        </view>
+        <view>
+          <view class="tb-hint">其他依法扣除（元/月，选填）</view>
+          <input class="tb-input num" type="digit" value="{{draft.other}}" placeholder="0" bindinput="onFieldInput" data-f="other" />
+        </view>
+      </view>
+    </view>
+
+    <!-- 逐月模式 -->
+    <view tt:if="{{mode === 'monthly'}}" style="margin-top: 24rpx;">
+      <view class="tb-note" style="margin-bottom: 16rpx;">逐月录入每月实际数据（默认预填全局值），累计预扣结果更贴近实际；未填月份按最近一个月推算。</view>
+      <view tt:for="{{monthlyDraft}}" tt:for-item="row" tt:for-index="i" tt:key="i" style="margin-bottom: 14rpx;">
+        <view tt:if="{{i < uptoMonth}}" class="tb-row" style="align-items: flex-end;">
+          <view style="width: 64rpx; flex-shrink: 0; padding-bottom: 14rpx; font-size: 24rpx; color: #6f6b80;">{{i + 1}}月</view>
+          <view style="flex: 1; min-width: 0;">
+            <input class="tb-input num" type="digit" value="{{row.salary}}" placeholder="税前工资" bindinput="onMonthlyInput" data-i="{{i}}" data-f="salary" />
+          </view>
+          <view style="flex: 1; min-width: 0;">
+            <input class="tb-input num" type="digit" value="{{row.deduction}}" placeholder="扣除合计" bindinput="onMonthlyInput" data-i="{{i}}" data-f="deduction" />
+          </view>
+        </view>
+      </view>
+      <view class="tb-hint">「扣除合计」= 个人社保 + 公积金 + 专项附加 + 其他扣除的每月总额。</view>
+    </view>
+  </view>
+
+  <!-- 结果 -->
+  <view tt:if="{{vm}}" class="tb-card tb-result" style="margin-top: 24rpx; padding: 28rpx 24rpx;">
+    <view class="tb-result-label">{{vm.heroLabel}}</view>
+    <view class="tb-result-value num">{{vm.heroNet}}</view>
+    <view class="tb-result-sub">{{vm.heroSub}}</view>
+  </view>
+
+  <view tt:if="{{vm}}" class="tb-grid2">
+    <view class="tb-mini">
+      <view class="tb-mini-label">当月预计个税</view>
+      <view class="tb-mini-value num">{{vm.taxText}}</view>
+    </view>
+    <view class="tb-mini">
+      <view class="tb-mini-label">社保公积金个人合计</view>
+      <view class="tb-mini-value num">{{vm.siHfText}}</view>
+    </view>
+    <view class="tb-mini">
+      <view class="tb-mini-label">预计全年税前收入</view>
+      <view class="tb-mini-value num">{{vm.annualIncomeText}}</view>
+    </view>
+    <view class="tb-mini">
+      <view class="tb-mini-label">预计全年个税</view>
+      <view class="tb-mini-value num">{{vm.annualTaxText}}</view>
+    </view>
+  </view>
+  <view tt:if="{{vm}}" class="tb-mini" style="margin-top: 20rpx;">
+    <view class="tb-mini-label">预计全年到手（工资部分）</view>
+    <view class="tb-mini-value num">{{vm.annualNetText}}</view>
+  </view>
+
+  <!-- 年终奖 -->
+  <view class="tb-card tb-card-pad" style="margin-top: 24rpx;">
+    <view class="tb-label">年终奖（选填，支持单独测算）</view>
+    <view class="tb-hint">可分别按「单独计税」与「并入综合所得」测算，二者取其一申报</view>
+    <input class="tb-input num" type="digit" value="{{draft.bonus}}" placeholder="0" bindinput="onFieldInput" data-f="bonus" />
+    <view tt:if="{{vm.bonusCmp}}" style="margin-top: 20rpx;">
+      <view class="tb-grid2" style="margin-top: 0;">
+        <view class="tb-mini">
+          <view class="tb-mini-label">① 单独计税 · 全年个税</view>
+          <view class="tb-mini-value num">{{vm.bonusCmp.sepAnnualText}}</view>
+        </view>
+        <view class="tb-mini">
+          <view class="tb-mini-label">② 并入综合 · 全年个税</view>
+          <view class="tb-mini-value num">{{vm.bonusCmp.combAnnualText}}</view>
+        </view>
+      </view>
+      <view class="tb-note {{vm.bonusCmp.sepBetter ? '' : 'tb-note-warn'}}" style="margin-top: 16rpx;">{{vm.bonusCmp.savingText}}</view>
+      <view class="tb-hint" style="margin-top: 12rpx; margin-bottom: 0;">{{bonusPolicyNote}}</view>
+    </view>
+  </view>
+
+  <!-- 逐月明细 -->
+  <view class="tb-card tb-card-pad" style="margin-top: 24rpx;" bindtap="onToggleDetails">
+    <view class="tb-row-between">
+      <view class="tb-strong" style="font-size: 26rpx;">查看逐月预扣明细</view>
+      <view class="tb-muted">{{showDetails ? '收起 ▴' : '展开 ▾'}}</view>
+    </view>
+    <view tt:if="{{showDetails && vm}}" style="margin-top: 16rpx;">
+      <view tt:for="{{vm.rows}}" tt:for-item="r" tt:key="month" class="tb-row-between" style="padding: 10rpx 0; border-top: 1rpx solid #f2f0f7;">
+        <view style="width: 64rpx; flex-shrink: 0; font-size: 22rpx; font-weight: 500; color: #211e2e;">{{r.month}}月</view>
+        <view class="num" style="font-size: 21rpx; color: #6f6b80;">税前 {{r.salaryText}}</view>
+        <view class="num" style="font-size: 21rpx; color: #6f6b80;">个税 {{r.taxText}}</view>
+        <view class="num" style="font-size: 21rpx; font-weight: 600; color: #211e2e;">到手 {{r.netText}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="tb-note tb-note-warn" style="margin-top: 24rpx;">{{simulationNote}}</view>
+  <view class="tb-hint" style="margin-top: 16rpx; margin-bottom: 0;">口径说明：月基本减除费用 5,000 元；采用累计预扣法（按年累计口径查表），与「年度汇算」全年合计基本一致；当月应预扣税额小于 0 时按 0 处理。</view>
+</view>

@@ -1,0 +1,63 @@
+<view class="tb-page">
+  <!-- 记录列表 -->
+  <view tt:if="{{!hasRecords}}" class="tb-card" style="padding: 64rpx 32rpx; text-align: center; color: #a5a1b3; font-size: 24rpx;">
+    还没有纪念日，在下方添加第一个吧。
+  </view>
+
+  <view tt:for="{{views}}" tt:for-item="v" tt:key="id" class="tb-card tb-card-pad" style="margin-bottom: 20rpx;">
+    <view class="tb-row-between">
+      <view style="min-width: 0;">
+        <view class="tb-strong" style="font-size: 28rpx;">{{v.name}}</view>
+        <view class="num tb-hint" style="margin-top: 4rpx; margin-bottom: 0;">{{v.dateText}} · {{v.repeatText}}</view>
+      </view>
+      <view class="tb-row" style="flex-shrink: 0; gap: 10rpx;">
+        <view class="tb-btn-ghost" style="padding: 8rpx 20rpx; font-size: 22rpx;" bindtap="onEditTap" data-id="{{v.id}}">编辑</view>
+        <view class="tb-btn-ghost {{deleteArmedId === v.id ? '' : ''}}" style="padding: 8rpx 20rpx; font-size: 22rpx; {{deleteArmedId === v.id ? 'border-color:#e05252;background:#fef2f2;color:#e05252;' : ''}}" bindtap="onDeleteTap" data-id="{{v.id}}">
+          {{deleteArmedId === v.id ? '确认删除' : '删除'}}
+        </view>
+      </view>
+    </view>
+
+    <view tt:if="{{!v.valid}}" style="margin-top: 12rpx; font-size: 22rpx; color: #e05252;">{{v.error}}</view>
+    <view tt:if="{{v.valid}}">
+      <view class="num" style="margin-top: 14rpx; font-size: 40rpx; font-weight: 700; color: #6d5bf6;">{{v.mainText}}</view>
+      <view tt:if="{{v.subText}}" class="num" style="margin-top: 6rpx; font-size: 22rpx; color: #6f6b80;">{{v.subText}}</view>
+      <view tt:if="{{v.nextText}}" class="num" style="margin-top: 6rpx; font-size: 22rpx; color: #6f6b80;">{{v.nextText}}</view>
+      <view tt:if="{{v.milestones.length > 0}}" class="tb-row" style="flex-wrap: wrap; gap: 12rpx; margin-top: 16rpx;">
+        <view tt:for="{{v.milestones}}" tt:for-item="m" tt:key="nText" class="tb-milestone-chip">{{m.nText}} · {{m.whenText}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 添加 / 编辑表单 -->
+  <view class="tb-card tb-card-pad" style="margin-top: 8rpx;">
+    <view class="tb-strong" style="font-size: 26rpx; margin-bottom: 18rpx;">{{editingId ? '编辑纪念日' : '添加纪念日'}}</view>
+    <view class="tb-label">纪念日名称</view>
+    <input class="tb-input" type="text" value="{{form.name}}" placeholder="如：恋爱纪念日" maxlength="20" bindinput="onNameInput" />
+    <view class="tb-label" style="margin-top: 20rpx;">开始日期</view>
+    <view class="tb-hint">可选未来日期，作为倒计时目标</view>
+    <picker mode="date" value="{{form.date}}" bindchange="onDatePick">
+      <view class="tb-input" style="color: {{form.date ? '#211e2e' : '#b3afc2'}};">{{form.date || '请选择开始日期'}}</view>
+    </picker>
+    <view class="tb-row" style="margin-top: 20rpx;" bindtap="onRepeatTap">
+      <view class="tb-check {{form.repeat ? 'tb-check-on' : ''}}">{{form.repeat ? '✓' : ''}}</view>
+      <view style="font-size: 24rpx; color: #211e2e;">每年重复（按周年纪念日计算）</view>
+    </view>
+    <view tt:if="{{isFeb29Form}}" style="margin-top: 20rpx;">
+      <view class="tb-label">非闰年的纪念日按哪天过？</view>
+      <view class="tb-seg">
+        <view class="tb-seg-item {{form.leapPref === 'day28' ? 'tb-seg-active' : ''}}" bindtap="onLeapPrefTap" data-v="day28">2 月 28 日</view>
+        <view class="tb-seg-item {{form.leapPref === 'mar1' ? 'tb-seg-active' : ''}}" bindtap="onLeapPrefTap" data-v="mar1">3 月 1 日</view>
+      </view>
+    </view>
+    <view tt:if="{{formError}}" class="tb-note tb-note-warn" style="margin-top: 16rpx;">{{formError}}</view>
+    <view class="tb-row" style="margin-top: 24rpx;">
+      <view class="tb-btn-primary" style="flex: 1;" bindtap="onSubmit">{{editingId ? '保存修改' : '添加纪念日'}}</view>
+      <view tt:if="{{editingId}}" class="tb-btn-ghost" style="flex-shrink: 0;" bindtap="onCancelEdit">取消</view>
+    </view>
+  </view>
+
+  <view class="tb-note" style="margin-top: 24rpx;">
+    口径说明：「已经走过 N 天」按自然日差计算（开始当天为 0 天）；「第 N 天」= 开始日 + (N−1) 天；「第 N 周年」按年份序号计。删除记录有二次确认，删除后不可恢复。数据保存在本机。
+  </view>
+</view>

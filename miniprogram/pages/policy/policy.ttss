@@ -1,0 +1,80 @@
+/** 城市政策参数页样式 */
+
+.wrap {
+  padding: 24rpx;
+  min-height: 100vh;
+}
+.head-row {
+  margin: 8rpx 4rpx 20rpx;
+}
+.page-title {
+  font-size: 38rpx;
+  font-weight: 700;
+  color: #1d1b16;
+}
+.empty-card {
+  padding: 60rpx 32rpx;
+  text-align: center;
+}
+.block-card {
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+}
+.block-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1d1b16;
+  margin-bottom: 12rpx;
+}
+.row-list {
+  border: 1rpx solid rgba(28, 25, 18, 0.1);
+  border-radius: 14rpx;
+  overflow: hidden;
+}
+.row-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16rpx;
+  padding: 16rpx 20rpx;
+  border-top: 1rpx solid rgba(28, 25, 18, 0.06);
+}
+.row-line:first-child {
+  border-top: none;
+}
+.row-label {
+  font-size: 24rpx;
+  color: #6e6a5e;
+  flex-shrink: 0;
+}
+.row-value {
+  font-size: 24rpx;
+  font-weight: 500;
+  color: #1d1b16;
+  text-align: right;
+}
+.mt4 { margin-top: 8rpx; }
+.mt8 { margin-top: 16rpx; }
+.mt12 { margin-top: 24rpx; }
+.tiny { font-size: 21rpx; line-height: 1.55; }
+.muted { color: #9b968a; }
+.strong { font-weight: 600; color: #1d1b16; }
+.warn-text { color: #8a5a12; }
+.grid-2 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+.grid-2 > view {
+  width: calc((100% - 16rpx) / 2);
+  min-width: 0;
+}
+.link-line {
+  font-size: 22rpx;
+  font-weight: 500;
+  color: #8c6d1f;
+}
+
+__zwork_rc=$? __zwork_ps=("${PIPESTATUS[@]}")
+if [ "$__zwork_rc" -eq 0 ] && [ "${#__zwork_ps[@]}" -gt 1 ]; then for __zwork_s in "${__zwork_ps[@]}"; do if [ "$__zwork_s" -ne 0 ] && [ "$__zwork_s" -ne 141 ]; then printf '[zwork: exit 0 but a pipeline stage exited %s (PIPESTATUS: %s)]\n' "$__zwork_s" "${__zwork_ps[*]}" >&2; break; fi; done; fi
+exit "$__zwork_rc"

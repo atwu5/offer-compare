@@ -1,0 +1,49 @@
+<view class="tb-page">
+  <view class="tb-card tb-card-pad">
+    <view class="tb-label">出生日期</view>
+    <picker mode="date" value="{{birth}}" start="1900-01-01" end="{{todayStr}}" bindchange="onDatePick">
+      <view class="tb-input" style="color: {{birth ? '#211e2e' : '#b3afc2'}};">{{birth || '请选择出生日期'}}</view>
+    </picker>
+    <view class="tb-hint" style="margin-top: 16rpx;">计划退休年龄（周岁）· 默认 60 岁，可手动修改</view>
+    <input class="tb-input num" type="number" value="{{ageDraft}}" placeholder="60" bindinput="onAgeInput" />
+
+    <view class="tb-grid2" style="margin-top: 20rpx;">
+      <view class="tb-note" style="text-align: center;">✓ 自定义退休年龄：结果精确</view>
+      <view class="tb-note tb-note-warn" style="text-align: center; opacity: 0.75;">按法定年龄估算：待完善后开放</view>
+    </view>
+  </view>
+
+  <view tt:if="{{error}}" class="tb-note tb-note-warn" style="margin-top: 24rpx;">{{error}}</view>
+
+  <view tt:if="{{vm}}" class="tb-card tb-result" style="margin-top: 24rpx; padding: 28rpx 24rpx;">
+    <view class="tb-result-label">{{vm.heroLabel}}</view>
+    <view class="tb-result-value num">{{vm.heroValue}}</view>
+    <view class="tb-result-sub">{{vm.heroSub}}</view>
+  </view>
+
+  <view tt:if="{{vm && !vm.exceeded}}" class="tb-card tb-card-pad" style="margin-top: 24rpx;">
+    <view class="tb-row-between">
+      <view class="tb-hint" style="margin-bottom: 0;">人生进度（出生 → 预计退休日）</view>
+      <view class="num" style="font-size: 24rpx; font-weight: 600; color: #6d5bf6;">{{vm.progressPct}}%</view>
+    </view>
+    <view class="tb-progress" style="margin-top: 14rpx;">
+      <view class="tb-progress-bar" style="width: {{vm.progressPct}}%;"></view>
+    </view>
+  </view>
+
+  <view tt:if="{{vm}}" class="tb-grid2">
+    <view class="tb-mini">
+      <view class="tb-mini-label">预计退休日期</view>
+      <view class="tb-mini-value num" style="font-size: 26rpx;">{{vm.retireDateText}}</view>
+      <view class="tb-mini-sub">按退休年龄 {{vm.ageText}} 计算</view>
+    </view>
+    <view class="tb-mini">
+      <view class="tb-mini-label">{{vm.exceeded ? '已退休时长' : '倒计时明细'}}</view>
+      <view class="tb-mini-value num" style="font-size: 26rpx;">{{vm.ymdText}}</view>
+    </view>
+  </view>
+
+  <view class="tb-note" style="margin-top: 24rpx;">
+    实际退休时间可能受劳动身份、特殊工种、弹性退休等因素影响；如需按法定退休年龄估算，请以当地人社部门核定为准。2 月 29 日出生的用户，预计退休日按 2 月 28 日落点计算。
+  </view>
+</view>
