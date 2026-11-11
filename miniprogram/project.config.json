@@ -1,10 +1,1 @@
-{
-  "compileType": "miniprogram",
-  "projectname": "offer-compare-douyin",
-  "description": "Offer 到手对比 · 抖音小程序版（纯本地计算）",
-  "appid": "tt0000000000000000",
-  "setting": {
-    "es6": true,
-    "minified": true
-  }
-}
+{"compileType":"miniprogram","projectname":"offer-compare-douyin","description":"Offer 到手对比 · 抖音小程序版（纯本地计算）","appid":"tte13497897f4da30101","setting":{"es6":true,"minified":true}}

@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "sanity": "tsx scripts/sanity.ts",
     "test:toolbox": "node --import tsx --test scripts/tests/*.test.ts",
-    "mini:build": "tsc -p miniprogram-src/tsconfig.json",
+    "mini:build": "node scripts/check-mini-artifacts.mjs && tsc -p miniprogram-src/tsconfig.json",
     "mini:sanity": "tsx scripts/sanity.mini.ts",
     "mini:sanity:toolbox": "tsx scripts/sanity.toolbox.mini.ts"
   },

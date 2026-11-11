@@ -74,7 +74,3 @@
   font-weight: 500;
   color: #8c6d1f;
 }
-
-__zwork_rc=$? __zwork_ps=("${PIPESTATUS[@]}")
-if [ "$__zwork_rc" -eq 0 ] && [ "${#__zwork_ps[@]}" -gt 1 ]; then for __zwork_s in "${__zwork_ps[@]}"; do if [ "$__zwork_s" -ne 0 ] && [ "$__zwork_s" -ne 141 ]; then printf '[zwork: exit 0 but a pipeline stage exited %s (PIPESTATUS: %s)]\n' "$__zwork_s" "${__zwork_ps[*]}" >&2; break; fi; done; fi
-exit "$__zwork_rc"
