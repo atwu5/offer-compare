@@ -1,20 +1,20 @@
 <view class="tb-page">
   <view class="tb-card tb-card-pad">
     <view class="tb-label">月收入（元）</view>
-    <input class="tb-input num" type="digit" value="{{draft.monthly}}" placeholder="10000" bindinput="onFieldInput" data-f="monthly" />
+    <view class="tb-field"><input class="tb-field-input num" type="digit" value="{{draft.monthly}}" placeholder="10000" placeholder-class="tb-placeholder" bindinput="onFieldInput" data-f="monthly" /></view>
     <view class="tb-grid2">
       <view>
         <view class="tb-hint">每周工作天数</view>
-        <input class="tb-input num" type="number" value="{{draft.days}}" placeholder="5" bindinput="onFieldInput" data-f="days" />
+        <view class="tb-field"><input class="tb-field-input num" type="number" value="{{draft.days}}" placeholder="5" placeholder-class="tb-placeholder" bindinput="onFieldInput" data-f="days" /></view>
       </view>
       <view>
         <view class="tb-hint">每天工作小时</view>
-        <input class="tb-input num" type="digit" value="{{draft.hours}}" placeholder="8" bindinput="onFieldInput" data-f="hours" />
+        <view class="tb-field"><input class="tb-field-input num" type="digit" value="{{draft.hours}}" placeholder="8" placeholder-class="tb-placeholder" bindinput="onFieldInput" data-f="hours" /></view>
       </view>
     </view>
     <view tt:if="{{!useAnnualDays}}" style="margin-top: 20rpx;">
       <view class="tb-hint">每年带薪工作周数 · 默认 52 周（休假默认视为带薪）；扣除假期请改用「全年工作天数」</view>
-      <input class="tb-input num" type="number" value="{{draft.weeks}}" placeholder="52" bindinput="onFieldInput" data-f="weeks" />
+      <view class="tb-field"><input class="tb-field-input num" type="number" value="{{draft.weeks}}" placeholder="52" placeholder-class="tb-placeholder" bindinput="onFieldInput" data-f="weeks" /></view>
     </view>
     <view class="tb-row" style="margin-top: 20rpx;" bindtap="onUseAnnualDaysTap">
       <view class="tb-check {{useAnnualDays ? 'tb-check-on' : ''}}">{{useAnnualDays ? '✓' : ''}}</view>
@@ -22,11 +22,11 @@
     </view>
     <view tt:if="{{useAnnualDays}}" style="margin-top: 20rpx;">
       <view class="tb-hint">全年工作天数</view>
-      <input class="tb-input num" type="number" value="{{draft.annualDays}}" placeholder="250" bindinput="onFieldInput" data-f="annualDays" />
+      <view class="tb-field"><input class="tb-field-input num" type="number" value="{{draft.annualDays}}" placeholder="250" placeholder-class="tb-placeholder" bindinput="onFieldInput" data-f="annualDays" /></view>
     </view>
     <view style="margin-top: 20rpx;">
       <view class="tb-hint">年度奖金（选填）· 计入年收入一起折算</view>
-      <input class="tb-input num" type="digit" value="{{draft.bonus}}" placeholder="0" bindinput="onFieldInput" data-f="bonus" />
+      <view class="tb-field"><input class="tb-field-input num" type="digit" value="{{draft.bonus}}" placeholder="0" placeholder-class="tb-placeholder" bindinput="onFieldInput" data-f="bonus" /></view>
     </view>
     <view class="tb-row" style="margin-top: 20rpx;">
       <view class="tb-hint" style="margin-bottom: 0;">收入口径</view>
@@ -89,7 +89,7 @@
     </view>
     <view tt:if="{{reverseOn}}" style="margin-top: 18rpx;">
       <view class="tb-hint">期望时薪（元 / 小时）· 沿用上方的工作制度</view>
-      <input class="tb-input num" type="digit" value="{{reverseTarget}}" placeholder="200" bindinput="onReverseTargetInput" />
+      <view class="tb-field"><input class="tb-field-input num" type="digit" value="{{reverseTarget}}" placeholder="200" placeholder-class="tb-placeholder" bindinput="onReverseTargetInput" /></view>
       <view tt:if="{{reverseVm}}" class="tb-grid2">
         <view class="tb-mini">
           <view class="tb-mini-label">对应年收入</view>

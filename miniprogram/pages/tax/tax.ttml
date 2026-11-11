@@ -14,23 +14,23 @@
     <!-- 简易模式 -->
     <view tt:if="{{mode === 'simple'}}" style="margin-top: 24rpx;">
       <view class="tb-label">税前月薪（元）</view>
-      <input class="tb-input num {{draft.salary === '' ? 'tb-input-invalid' : ''}}" type="digit" value="{{draft.salary}}" placeholder="20000" bindinput="onFieldInput" data-f="salary" />
+      <view class="tb-field {{draft.salary === '' ? 'tb-field-invalid' : ''}}"><input class="tb-field-input num" type="digit" value="{{draft.salary}}" placeholder="20000" placeholder-class="tb-placeholder" bindinput="onFieldInput" data-f="salary" /></view>
       <view class="tb-grid2">
         <view>
           <view class="tb-hint">社保个人缴纳（元/月）· 不同城市不同，请按实际填写</view>
-          <input class="tb-input num" type="digit" value="{{draft.si}}" placeholder="0" bindinput="onFieldInput" data-f="si" />
+          <view class="tb-field"><input class="tb-field-input num" type="digit" value="{{draft.si}}" placeholder="0" placeholder-class="tb-placeholder" bindinput="onFieldInput" data-f="si" /></view>
         </view>
         <view>
           <view class="tb-hint">公积金个人缴纳（元/月）</view>
-          <input class="tb-input num" type="digit" value="{{draft.hf}}" placeholder="0" bindinput="onFieldInput" data-f="hf" />
+          <view class="tb-field"><input class="tb-field-input num" type="digit" value="{{draft.hf}}" placeholder="0" placeholder-class="tb-placeholder" bindinput="onFieldInput" data-f="hf" /></view>
         </view>
         <view>
           <view class="tb-hint">专项附加扣除（元/月）</view>
-          <input class="tb-input num" type="digit" value="{{draft.special}}" placeholder="0" bindinput="onFieldInput" data-f="special" />
+          <view class="tb-field"><input class="tb-field-input num" type="digit" value="{{draft.special}}" placeholder="0" placeholder-class="tb-placeholder" bindinput="onFieldInput" data-f="special" /></view>
         </view>
         <view>
           <view class="tb-hint">其他依法扣除（元/月，选填）</view>
-          <input class="tb-input num" type="digit" value="{{draft.other}}" placeholder="0" bindinput="onFieldInput" data-f="other" />
+          <view class="tb-field"><input class="tb-field-input num" type="digit" value="{{draft.other}}" placeholder="0" placeholder-class="tb-placeholder" bindinput="onFieldInput" data-f="other" /></view>
         </view>
       </view>
     </view>
@@ -42,10 +42,10 @@
         <view tt:if="{{i < uptoMonth}}" class="tb-row" style="align-items: flex-end;">
           <view style="width: 64rpx; flex-shrink: 0; padding-bottom: 14rpx; font-size: 24rpx; color: #6f6b80;">{{i + 1}}月</view>
           <view style="flex: 1; min-width: 0;">
-            <input class="tb-input num" type="digit" value="{{row.salary}}" placeholder="税前工资" bindinput="onMonthlyInput" data-i="{{i}}" data-f="salary" />
+            <view class="tb-field"><input class="tb-field-input num" type="digit" value="{{row.salary}}" placeholder="税前工资" placeholder-class="tb-placeholder" bindinput="onMonthlyInput" data-i="{{i}}" data-f="salary" /></view>
           </view>
           <view style="flex: 1; min-width: 0;">
-            <input class="tb-input num" type="digit" value="{{row.deduction}}" placeholder="扣除合计" bindinput="onMonthlyInput" data-i="{{i}}" data-f="deduction" />
+            <view class="tb-field"><input class="tb-field-input num" type="digit" value="{{row.deduction}}" placeholder="扣除合计" placeholder-class="tb-placeholder" bindinput="onMonthlyInput" data-i="{{i}}" data-f="deduction" /></view>
           </view>
         </view>
       </view>
@@ -87,7 +87,7 @@
   <view class="tb-card tb-card-pad" style="margin-top: 24rpx;">
     <view class="tb-label">年终奖（选填，支持单独测算）</view>
     <view class="tb-hint">可分别按「单独计税」与「并入综合所得」测算，二者取其一申报</view>
-    <input class="tb-input num" type="digit" value="{{draft.bonus}}" placeholder="0" bindinput="onFieldInput" data-f="bonus" />
+    <view class="tb-field"><input class="tb-field-input num" type="digit" value="{{draft.bonus}}" placeholder="0" placeholder-class="tb-placeholder" bindinput="onFieldInput" data-f="bonus" /></view>
     <view tt:if="{{vm.bonusCmp}}" style="margin-top: 20rpx;">
       <view class="tb-grid2" style="margin-top: 0;">
         <view class="tb-mini">

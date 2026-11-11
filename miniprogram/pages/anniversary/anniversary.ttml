@@ -33,7 +33,7 @@
   <view class="tb-card tb-card-pad" style="margin-top: 8rpx;">
     <view class="tb-strong" style="font-size: 26rpx; margin-bottom: 18rpx;">{{editingId ? '编辑纪念日' : '添加纪念日'}}</view>
     <view class="tb-label">纪念日名称</view>
-    <input class="tb-input" type="text" value="{{form.name}}" placeholder="如：恋爱纪念日" maxlength="20" bindinput="onNameInput" />
+    <view class="tb-field"><input class="tb-field-input" type="text" value="{{form.name}}" placeholder="如：恋爱纪念日" placeholder-class="tb-placeholder" maxlength="20" bindinput="onNameInput" /></view>
     <view class="tb-label" style="margin-top: 20rpx;">开始日期</view>
     <view class="tb-hint">可选未来日期，作为倒计时目标</view>
     <picker mode="date" value="{{form.date}}" bindchange="onDatePick">

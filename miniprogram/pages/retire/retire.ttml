@@ -5,7 +5,7 @@
       <view class="tb-input" style="color: {{birth ? '#211e2e' : '#b3afc2'}};">{{birth || '请选择出生日期'}}</view>
     </picker>
     <view class="tb-hint" style="margin-top: 16rpx;">计划退休年龄（周岁）· 默认 60 岁，可手动修改</view>
-    <input class="tb-input num" type="number" value="{{ageDraft}}" placeholder="60" bindinput="onAgeInput" />
+    <view class="tb-field"><input class="tb-field-input num" type="number" value="{{ageDraft}}" placeholder="60" placeholder-class="tb-placeholder" bindinput="onAgeInput" /></view>
 
     <view class="tb-grid2" style="margin-top: 20rpx;">
       <view class="tb-note" style="text-align: center;">✓ 自定义退休年龄：结果精确</view>
