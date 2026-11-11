@@ -13,3 +13,7 @@ dist/
 .idea/
 .vscode/
 *.swp
+
+# 本地实验/解压残留（不进仓库）
+__MACOSX/
+常用计算器/
